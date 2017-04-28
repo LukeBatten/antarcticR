@@ -4,7 +4,7 @@
 \alias{plotAntarctica}
 \title{Plot points on the antarctic map}
 \usage{
-plotAntarctica(antMap, df, cluster = FALSE, size = 2)
+plotAntarctica(antMap, df, clusterPlot = FALSE, pointSize = 2)
 }
 \arguments{
 \item{antMap}{your map made from drawAntarctica}
