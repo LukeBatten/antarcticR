@@ -7,15 +7,13 @@
 #' @export
 #' @examples
 #' 
-#' cities <- read.csv("dividedEvents1.csv",header=T, sep=",")
-#' df.cities <- as.matrix(cities)
-#' antFrame = data.frame(df.cities)#long=df.cities$long, lat=df.cities$lat)
-#' antFrame
+#' points <- read.csv("dividedEvents1.csv",header=T, sep=",")
+#' df.points <- as.matrix(points)
+#' antFrame = data.frame(df.points)
 #' print("Computing distance matrix...")
 #' require(geosphere)
-#' d  <- genHaversineMat(antFrame)   # distance matrix
+#' d  <- genHaversineMat(antFrame)
 #'
-#' genHaversineMat()
 
 genHaversineMat = function(df)
 {
@@ -30,13 +28,50 @@ genHaversineMat = function(df)
     return(as.dist(dm))
 }
 
+#' A function to generate a Haversine matrix from a csv file
+#' 
+#' Generate a distance matrix of great-circle distances from a csv file with longitude and latitude distances 
+#' @param csvFile Your csv file
+#' @return A haversine distance matrix
+#' @keywords matrix, Haversine, csv, distance
+#' @export
+#' @examples
+
+csvToHaversineMat = function(csvFile)
+{
+    print("Reading the csv...")
+    points <- read.csv(csvFile,header=T, sep=",")
+    df.points <- as.matrix(points)
+    antFrame = data.frame(df.points)
+    print("Computing distance matrix...")
+    d  <- genHaversineMat(antFrame)
+}
+
+#' Turn a longitude, latitude csv file into a dataframe
+#' 
+#' Generate a dataframe from a longitude-latitude csv file 
+#' @param csvFile Your csv file
+#' @return A dataframe
+#' @keywords dataframe
+#' @export
+#' @examples
+
+csvToDF = function(csvFile)
+{
+    points <- read.csv(csvFile,header=T, sep=",")
+    df.points <- as.matrix(points)
+    antFrame = data.frame(df.points)#long=df.points$long, lat=df.points$lat)
+}
+
 ###
 #' Set up the drawing of a map of Antarctica
 #'
 #' @return 
 #' @keywords draw, Antarctica, plot
 #' @export
-#' @examples drawAntarctica
+#' @examples world3 <- drawAntarctica()
+#' world3
+
 drawAntarctica = function()
 {
     print("Loading geo libraries")
@@ -55,3 +90,19 @@ drawAntarctica = function()
     world3 <- world2 + coord_map("ortho", orientation=c(-90, 0, 0)) 
 }
 
+###
+#' Plot points on the antarctic map 
+#'
+#' @return 
+#' @keywords draw, Antarctica, plot
+#' @export
+#' @examples world4 <- plotAntarctica(d)
+
+plotAntarctica = function(antMap)
+{
+    
+    world4 <- antMap +
+    geom_point(data = antFrame, aes(x = long, y = lat, color=factor(clust)), size = 1)+
+    scale_color_discrete("Cluster")
+    
+}

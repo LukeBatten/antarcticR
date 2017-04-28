@@ -1,0 +1,6 @@
+require(antarcticR)
+
+points <- csvToHaversineMat("../data/dividedEvents1.csv")
+
+antar <- drawAntarctica()
+antar

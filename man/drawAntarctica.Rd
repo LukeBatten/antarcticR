@@ -2,15 +2,16 @@
 % Please edit documentation in R/antarcticR.R
 \name{drawAntarctica}
 \alias{drawAntarctica}
-\title{Draw Antarctica}
+\title{Set up the drawing of a map of Antarctica}
 \usage{
 drawAntarctica()
 }
 \description{
-Draw Antarctica
+Set up the drawing of a map of Antarctica
 }
 \examples{
-drawAntarctica
+world3 <- drawAntarctica()
+plot(world3)
 }
 \keyword{Antarctica,}
 \keyword{draw,}

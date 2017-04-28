@@ -17,15 +17,13 @@ Generate a distance matrix of great-circle distances from a dataframe with longi
 }
 \examples{
 
-cities <- read.csv("dividedEvents1.csv",header=T, sep=",")
-df.cities <- as.matrix(cities)
-antFrame = data.frame(df.cities)#long=df.cities$long, lat=df.cities$lat)
-antFrame
+points <- read.csv("dividedEvents1.csv",header=T, sep=",")
+df.points <- as.matrix(points)
+antFrame = data.frame(df.points)
 print("Computing distance matrix...")
 require(geosphere)
-d  <- genHaversineMat(antFrame)   # distance matrix
+d  <- genHaversineMat(antFrame)
 
-genHaversineMat()
 }
 \keyword{Haversine,}
 \keyword{dataframe,}
