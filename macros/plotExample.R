@@ -8,5 +8,5 @@ dataFrame <- csvToDF("../data/examplePoints.csv")
 antarcticMap <- drawAntarctica()
 #antarcticMap
 
-jub <- plotAntarctica(antarcticMap, dataFrame, cluster=FALSE)
+jub <- plotAntarctica(antarcticMap, dataFrame)
 jub
