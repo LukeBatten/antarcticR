@@ -3,8 +3,10 @@ require(antarcticR)
 
 # produce a latitude-longitude dataframe froma .csv file: used to look at the actually long-lat positions
 dataFrame <- csvToDF("../data/examplePoints.csv")
+#dataFrame
 
 antarcticMap <- drawAntarctica()
+#antarcticMap
 
-antarWithData <- plotAntarctica(antarcticMap, dataFrame)
-antarWithData
+jub <- plotAntarctica(antarcticMap, dataFrame, cluster=FALSE)
+jub

@@ -8,10 +8,15 @@ dataFrame <- csvToDF("../data/examplePoints.csv")
 havMat <- genHaversineMat(dataFrame)
 
 antarcticMap <- drawAntarctica()
+antarcticMap
 
 # Perform clustering
-clustered<- clusterResult(havMat, 200000, 2, 70000)
-dataFrame$clust <- clustered$cluster
+blob<- clusterResult(havMat, 200000, 2, 70000)
+dataFrame$clust <- blob$cluster
+#dataFrame$clust
 
-mapWResults <- plotAntarctica(antarcticMap, dataFrame, cluster=TRUE)
-mapWResults
+map <- plotAntarctica(antarcticMap, dataFrame, cluster=FALSE, size=2)
+map
+
+#mapWResults <- plotAntarctica(antarcticMap, dataFrame, cluster=FALSE)
+#mapWResults
