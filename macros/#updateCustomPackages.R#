@@ -10,4 +10,10 @@ install("antarcticR")
 pack <- "antarcticR"
 path <- find.package(pack)
 
+y <- 'cd ../.. ; pwd; rm antarcticR.pdf; cd -'
+system(y)
+
 system(paste(shQuote(file.path(R.home("bin"), "R")),"CMD", "Rd2pdf", shQuote(path)))
+
+x <- 'cp ../../antarcticR.pdf .'
+system(x)
