@@ -5,9 +5,3 @@ setwd("~/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR")
 document()
 setwd("..")
 install("antarcticR")
-
-## make the manual
-pack <- "antarcticR"
-path <- find.package(pack)
-
-system(paste(shQuote(file.path(R.home("bin"), "R")),"CMD", "Rd2pdf", shQuote(path)))
