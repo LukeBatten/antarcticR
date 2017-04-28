@@ -7,7 +7,7 @@
 csvToHaversineMat(csvFile)
 }
 \arguments{
-\item{df}{Your csv file}
+\item{csvFile}{Your csv file}
 }
 \value{
 A haversine distance matrix
@@ -16,7 +16,7 @@ A haversine distance matrix
 Generate a distance matrix of great-circle distances from a csv file with longitude and latitude distances
 }
 \examples{
-
+mat <- csvToHaversineMat("myData.csv")
 }
 \keyword{Haversine,}
 \keyword{csv,}

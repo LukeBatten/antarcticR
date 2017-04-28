@@ -11,7 +11,7 @@ Set up the drawing of a map of Antarctica
 }
 \examples{
 world3 <- drawAntarctica()
-plot(world3)
+world3
 }
 \keyword{Antarctica,}
 \keyword{draw,}

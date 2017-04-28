@@ -9,7 +9,9 @@ havMat <- genHaversineMat(dataFrame)
 
 antarcticMap <- drawAntarctica()
 
-antarWithData <- plotAntarctica(antarcticMap, dataFrame)
-antarWithData
+# Perform clustering
+clusterResult<- clusterAntarctica(havMat, 200000, 2, 70000)
+dataFrame$clust <- clusterResult$cluster
 
-<- clusterAntarctica(havMat, 200000, 2, 70000)
+mapWResults <- plotAntarctica(antarcticMap, dataFrame, cluster=TRUE)
+mapWResults

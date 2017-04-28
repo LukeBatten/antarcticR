@@ -36,6 +36,7 @@ genHaversineMat = function(df)
 #' @keywords matrix, Haversine, csv, distance
 #' @export
 #' @examples
+#' mat <- csvToHaversineMat("myData.csv")
 
 csvToHaversineMat = function(csvFile)
 {
@@ -55,6 +56,7 @@ csvToHaversineMat = function(csvFile)
 #' @keywords dataframe
 #' @export
 #' @examples
+#' df <- csvToHaversineMat("myData.csv")
 
 csvToDF = function(csvFile)
 {
@@ -93,16 +95,49 @@ drawAntarctica = function()
 ###
 #' Plot points on the antarctic map 
 #'
+#' @param antMap your map made from drawAntarctica
+#' @param df Your data frame
+#' @return 
+#' @keywords draw, Antarctica, plotx
+#' @export
+#' @examples world4 <- plotAntarctica(map, dataFrame)
+#' world4
+
+plotAntarctica = function(antMap, df, cluster=FALSE)
+{
+    print("Plotting points")
+    if(cluster==FALSE)
+    {
+        world4 <- antMap +
+            geom_point(data = df, aes(x = long, y = lat, size = 1))
+    }
+    
+    if(cluster==TRUE)
+    {
+        world4 <- antMap +
+            geom_point(data = df, aes(x = long, y = lat, color=factor(clust)), size = 1)+
+            scale_color_discrete("Cluster")
+        
+    }
+}
+
+###
+#' A function to use some clustering methods from the dbscan package 
+#'
+#' @param haversineMatrix
 #' @return 
 #' @keywords draw, Antarctica, plot
 #' @export
-#' @examples world4 <- plotAntarctica(d)
+#' @examples
+#' 
 
-plotAntarctica = function(antMap)
+clusterResult = function(haversineMatrix, eps=200000, minPts,eps_cl)
 {
-    
-    world4 <- antMap +
-    geom_point(data = antFrame, aes(x = long, y = lat, color=factor(clust)), size = 1)+
-    scale_color_discrete("Cluster")
-    
+    library(dbscan)
+    print("Employing the clustering algorithm...")
+
+    res <- optics(haversineMatrix, eps, minPts)    
+    res2 <- extractDBSCAN(res, eps_cl)
+
+    #antFrame$clust <- res2$cluster
 }
