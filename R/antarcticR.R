@@ -103,19 +103,19 @@ drawAntarctica = function()
 #' @examples world4 <- plotAntarctica(map, dataFrame)
 #' world4
 
-plotAntarctica = function(antMap, df, cluster=FALSE)
+plotAntarctica = function(antMap, df, cluster=FALSE, size = 2)
 {
     print("Plotting points")
     if(cluster==FALSE)
     {
         world4 <- antMap +
-            geom_point(data = df, aes(x = long, y = lat, size = 1))
+            geom_point(data = df, aes(x = long, y = lat, size))
     }
     
     if(cluster==TRUE)
     {
         world4 <- antMap +
-            geom_point(data = df, aes(x = long, y = lat, color=factor(clust)), size = 1)+
+            geom_point(data = df, aes(x = long, y = lat, color=factor(clust)), size)+
             scale_color_discrete("Cluster")
         
     }
