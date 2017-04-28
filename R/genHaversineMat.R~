@@ -1,0 +1,12 @@
+genHaversineMat = function(df)
+{
+    require(geosphere)
+    d <- function(i,z) #z[1:2] contain long, lat
+    {          
+        dist <- rep(0,nrow(z))
+        dist[i:nrow(z)] <- distHaversine(z[i:nrow(z),1:2],z[i,1:2])
+        return(dist)
+    }
+    dm <- do.call(cbind,lapply(1:nrow(df),d,df))
+    return(as.dist(dm))
+}
