@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # update all packages
-rm ../../antarcticR.pdf
 Rscript updateCustomPackages.R
-cp ../../antarcticR.pdf ..
+R CMD Rd2pdf antarcticR
+cp ../../antarcticR.pdf 
 
 git add ../*
 git 
