@@ -12,6 +12,5 @@ cp antarcticR.pdf ./antarcticR
 cd ./antarcticR
 echo "Git..."
 git add *
-git 
 git commit
 git push origin master

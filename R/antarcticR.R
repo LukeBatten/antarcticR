@@ -103,7 +103,7 @@ drawAntarctica = function()
 #' @examples world4 <- plotAntarctica(map, dataFrame)
 #' world4
 
-plotAntarctica = function(antMap, df, clusterPlot=FALSE, pointSize=2, shapes=TRUE)
+plotAntarctica = function(antMap, df, clusterPlot=FALSE, pointSize=2, shapes=TRUE, newSetPlot=0)
 {
     print("Plotting points")
 
@@ -127,7 +127,7 @@ plotAntarctica = function(antMap, df, clusterPlot=FALSE, pointSize=2, shapes=TRU
         {
             world4 <- antMap +
                 geom_point(data = df, aes(x = long, y = lat, color=factor(clust), shape=factor(clust)), size=pointSize)+
-                scale_shape_manual(values=seq(65,122))
+                scale_shape_manual(values=seq(65+newSetPlot,122+newSetPlot))
                                         #scale_color_discrete("Cluster") ## comment this out as we are now using shapes too
         }
 
