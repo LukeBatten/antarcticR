@@ -30,6 +30,6 @@ print("Printing all candidate events:")
 unclustered2 <- dataFrame2[ which(dataFrame2$clust == 0), ]
 unclustered2
 
-mapWResults <- plotAntarctica(antarcticMap, dataFrame1, cluster=TRUE)
-mapWResults2 <- plotAntarctica(mapWResults, dataFrame2, cluster=TRUE)
+mapWResults <- plotAntarctica(antarcticMap, dataFrame1, cluster=TRUE, shapes=TRUE, pointSize=5)
+mapWResults2 <- plotAntarctica(mapWResults, dataFrame2, cluster=TRUE, shapes=TRUE, pointSize=5)
 mapWResults2 
