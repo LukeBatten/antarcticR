@@ -16,5 +16,5 @@ blob<- clusterResult(havMat, 200000, 2, 70000)
 dataFrame$clust <- blob$cluster
 #dataFrame$clust
 
-mapWResults <- plotAntarctica(antarcticMap, dataFrame, clusterPlot=TRUE)
+mapWResults <- plotAntarctica(antarcticMap, dataFrame, clusterPlot=FALSE)
 mapWResults
