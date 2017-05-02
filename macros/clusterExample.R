@@ -6,6 +6,7 @@ dataFrame <- csvToDF("../data/examplePoints.csv")
 
 ## generate a Haversine Matrix from the lat-long dataFrame
 havMat <- genHaversineMat(dataFrame)
+head(havMat)
 
 antarcticMap <- drawAntarctica()
 #antarcticMap
@@ -16,5 +17,5 @@ blob<- clusterResult(havMat, 200000, 2, 70000)
 dataFrame$clust <- blob$cluster
 #dataFrame$clust
 
-mapWResults <- plotAntarctica(antarcticMap, dataFrame, clusterPlot=TRUE, pointSize = 3, shapes=TRUE)
+mapWResults <- plotAntarctica(antarcticMap, dataFrame, clusterPlot=TRUE, pointSize = 5, shapes=TRUE)
 mapWResults
