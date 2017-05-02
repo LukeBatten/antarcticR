@@ -48,9 +48,9 @@ genCartesianMat = function(df)
 {
     toRad <- pi / 180 
     
-    x <-  6371000 *  cos(df[,2] * toRad) * cos(df[,1] * toRad)
-    y <-  6371000 *  cos(df[,2] * toRad) * sin(df[,1] * toRad)
-    z <-  6371000 * sin(df[,2] * toRad)
+    x <-  6378137 *  cos(df[,2] * toRad) * cos(df[,1] * toRad)
+    y <-  6378137 *  cos(df[,2] * toRad) * sin(df[,1] * toRad)
+    z <-  6378137 * sin(df[,2] * toRad)
     
     xyzDataFrame <- data.frame(x,y,z)
     
