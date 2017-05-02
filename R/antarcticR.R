@@ -28,6 +28,36 @@ genHaversineMat = function(df)
     return(as.dist(dm))
 }
 
+#' A function to generate a Cartesian matrix from a dataframe
+#' 
+#' Generate a distance matrix of x-y-z distances from a dataframe with longitude and latitude points
+#' @param df Your data frame
+#' @return A Cartesian distance matrix
+#' @keywords matrix, Cartesian, dataframe, distance
+#' @export
+#' @examples
+#' 
+#' points <- read.csv("dividedEvents1.csv",header=T, sep=",")
+#' df.points <- as.matrix(points)
+#' antFrame = data.frame(df.points)
+#' print("Computing distance matrix...")
+#' d  <- genCartesianMatrix(antFrame)
+#'
+
+genCartesianMat = function(df)
+{
+    toRad <- pi / 180 
+    
+    x <-  6371000 *  cos(df[,2] * toRad) * cos(df[,1] * toRad)
+    y <-  6371000 *  cos(df[,2] * toRad) * sin(df[,1] * toRad)
+    z <-  6371000 * sin(df[,2] * toRad)
+    
+    xyzDataFrame <- data.frame(x,y,z)
+    
+    distMat <- dist(xyzDataFrame, method = "euclidean")
+    
+}
+
 #' A function to generate a Haversine matrix from a csv file
 #' 
 #' Generate a distance matrix of great-circle distances from a csv file with longitude and latitude distances 
