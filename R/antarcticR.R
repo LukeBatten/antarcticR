@@ -103,22 +103,40 @@ drawAntarctica = function()
 #' @examples world4 <- plotAntarctica(map, dataFrame)
 #' world4
 
-plotAntarctica = function(antMap, df, clusterPlot=FALSE, pointSize=2)
+plotAntarctica = function(antMap, df, clusterPlot=FALSE, pointSize=2, shapes=TRUE)
 {
     print("Plotting points")
+
+#### STANDARD PLOT
     if(clusterPlot==FALSE)
     {
         world4 <- antMap +
-            geom_point(data = df, aes(x = long, y = lat, size=pointSize))
+            geom_point(data = df, aes(x = long, y = lat), size=pointSize)
     }
-    
+
+#### CLUSTER PLOT
     else
     {
-        world4 <- antMap +
-            geom_point(data = df, aes(x = long, y = lat, color=factor(clust)), size=pointSize)+
-            scale_color_discrete("Cluster")
-        
+        if(shapes==FALSE)
+        {
+            world4 <- antMap +
+                geom_point(data = df, aes(x = long, y = lat, color=factor(clust)), size=pointSize)
+        }
+
+        else if(shapes==TRUE)
+        {
+            world4 <- antMap +
+                geom_point(data = df, aes(x = long, y = lat, color=factor(clust), shape=factor(clust)), size=pointSize)+
+                scale_shape_manual(values=seq(65,122))
+                                        #scale_color_discrete("Cluster") ## comment this out as we are now using shapes too
+        }
+
+        else
+        {
+            print("This shape argument is not accepted!")
+        }
     }
+    
 }
 
 ###
@@ -139,5 +157,5 @@ clusterResult = function(haversineMatrix, eps=200000, minPts,eps_cl)
     res <- optics(haversineMatrix, eps, minPts)    
     res2 <- extractDBSCAN(res, eps_cl)
 
-    #antFrame$clust <- res2$cluster
+                                        #antFrame$clust <- res2$cluster
 }

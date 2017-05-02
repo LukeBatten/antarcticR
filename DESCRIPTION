@@ -2,9 +2,7 @@ Package: antarcticR
 Title: Visualisation tools for Antarctica, including some clustering methods
 Version: 0.0.0.9000
 Authors@R: person("Luke", "Batten", email = "lukeb@physics.org", role = c("aut", "cre"))
-Description: This package mainly contains functions to plot longitude-latitude points onto the Antarctic continent. antarcticR can
-convert CSV files into data frames for plotting, or into Haversine distance matrices for clustering. The results can be
-combined and visualised on the bottom of a globe, or other views.
+Description: This package mainly contains functions to plot longitude-latitude points onto the Antarctic continent. antarcticR can convert CSV files into data frames for plotting, or into Haversine distance matrices for clustering. The results can be combined and visualised on the bottom of a globe, or other views.
 Depends: R (>= 3.3.3)
 License: None currently
 Encoding: UTF-8
