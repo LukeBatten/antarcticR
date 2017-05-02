@@ -15,10 +15,6 @@ xyzDataFrame <- data.frame(x,y,z)
 
 distMat <- dist(xyzDataFrame, method = "euclidean")
 head(distMat)
-library(reshape2)
-
-df <- melt(as.matrix(distMat))
-#head(df)
 
 antarcticMap <- drawAntarctica()
 
