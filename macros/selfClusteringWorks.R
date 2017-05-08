@@ -1,8 +1,7 @@
-### Quick example macro of how to run some antarcticR functions
+### Projection EASs onto continent. What % self-clustering do we see?
 require(antarcticR)
 
-## produce a latitude-longitude dataframe froma .csv file: used to look at the actually long-lat positions
-dataFrame <- csvToDF("../data/examplePoints.csv")
+dataFrame <- csvToDF("../../EAScsvs/output_EAS50_seed2.csv")
 
 ## generate a Haversine Matrix from the lat-long dataFrame
 havMat <- genHaversineMat(dataFrame)
@@ -15,9 +14,11 @@ antarcticMap <- drawAntarctica()
 blob<- clusterResult(havMat, 200000, 2, 70000)
 
 dataFrame$clust <- blob$cluster
-                                        #dataFrame$clust
 
-dataFrame
+unclustered <- dataFrame[ which(dataFrame$clust == 0), ]
+
+selfClusteringPercentage <- nrow(unclustered)/nrow(dataFrame) * 100
+selfClusteringPercentage
 
 mapWResults <- plotAntarctica(antarcticMap, dataFrame, clusterPlot=TRUE, pointSize = 5, shapes=TRUE)
 mapWResults
