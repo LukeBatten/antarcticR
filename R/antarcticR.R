@@ -133,19 +133,19 @@ drawAntarctica = function()
 #' @examples world4 <- plotAntarctica(map, dataFrame)
 #' world4
 
-plotAntarctica = function(antMap, df, clusterPlot=FALSE, pointSize=2, shapes=TRUE, newSetPlot=0)
+plotAntarctica = function(antMap, df, clusterPlot=FALSE, selfClusterPlot=FALSE, pointSize=2, shapes=TRUE, newSetPlot=0)
 {
     print("Plotting points")
 
 #### STANDARD PLOT
-    if(clusterPlot==FALSE)
+    if(clusterPlot==FALSE & selfClusterPlot==FALSE)
     {
         world4 <- antMap +
             geom_point(data = df, aes(x = long, y = lat), size=pointSize)
     }
 
 #### CLUSTER PLOT
-    else
+    else if(clusterPlot == TRUE)
     {
         if(shapes==FALSE)
         {
@@ -157,7 +157,7 @@ plotAntarctica = function(antMap, df, clusterPlot=FALSE, pointSize=2, shapes=TRU
         {
             world4 <- antMap +
                 geom_point(data = df, aes(x = long, y = lat, color=factor(clust), shape=factor(clust)), size=pointSize)+
-                scale_shape_manual(values=seq(65+newSetPlot,122+newSetPlot))
+                scale_shape_manual(values=seq(65+newSetPlot,165+newSetPlot))
                                         #scale_color_discrete("Cluster") ## comment this out as we are now using shapes too
         }
 
@@ -166,6 +166,26 @@ plotAntarctica = function(antMap, df, clusterPlot=FALSE, pointSize=2, shapes=TRU
             print("This shape argument is not accepted!")
         }
     }
+
+    else if(selfClusterPlot == TRUE) ## shows those which clustered and those which did not
+    {
+
+        unclustered <- df[ which(df$clust == 0), ]
+        clustered <- df[ which(df$clust != 0), ]
+        
+        mapWResults <- antarcticMap +
+                geom_point(data = unclustered, aes(x = long, y = lat), size=2) +
+                geom_point(data = clustered, aes(x = long, y = lat, color=factor(clust)), size=2)
+
+        }
+        
+    }
+
+    else
+    {
+        print("Too many plot types selected!")
+    }
+    
     
 }
 

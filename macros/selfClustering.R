@@ -8,7 +8,7 @@ selfCluster = function(df)
 {
     havMat <- genHaversineMat(df)
 
-    blob<- clusterResult(havMat, 200000, 2, epsilon)
+    blob<- clusterResult(havMat, 200000, 4, epsilon)
     df$clust <- blob$cluster
     ##antarcticMap <- drawAntarctica()
     
@@ -68,22 +68,22 @@ epsilon <- 50000
 finalDf4 <- makeFinalFrame()
 
 ### Add Linda's approximate results as a dataframe ###
-blobX <- c(10,25,50,75,100,300,500,700,1000)
-blobY <- c(99.2,97,93,90,87,75,61,50,41)
-finalDfLin <- data.frame(blobX, blobY)
+#blobX <- c(10,25,50,75,100,300,500,700,1000)
+#blobY <- c(99.2,97,93,90,87,75,61,50,41)
+#finalDfLin <- data.frame(blobX, blobY)
 
 finalPlot <- ggplot() +
     geom_line(data=finalDf, aes(x=easStartVals, y=selfClusteringResult,group=epsilon,color=factor(epsilon),size=1.25)) +
     geom_line(data=finalDf2, aes(x=easStartVals, y=selfClusteringResult,group=epsilon,color=factor(epsilon),size=1.25)) +
     geom_line(data=finalDf3, aes(x=easStartVals, y=selfClusteringResult,group=epsilon,color=factor(epsilon),size=1.25))+
     geom_line(data=finalDf4, aes(x=easStartVals, y=selfClusteringResult,group=epsilon,color=factor(epsilon),size=1.25))+
-    geom_line(data=finalDfLin, aes(x=blobX, y=blobY,size=1.25))+ 
-        ggtitle(bquote(list( "Non self-clustering efficiency vs EASs injected"))) +
+    #geom_line(data=finalDfLin, aes(x=blobX, y=blobY,size=1.25))+ 
+        ggtitle(bquote(list( "Non self-clustering efficiency vs EASs injected (triplets)"))) +
         labs(x="EASs injected", y="Non self-clustering %") +
         theme(axis.title.y = element_text(size=25, family="Trebuchet MS")) +
         theme(plot.title = element_text(size=30, family="Trebuchet MS", face="bold", hjust=0)) +
     theme(axis.text = element_text(size=35, family="Trebuchet MS"),axis.title=element_text(size=25)) +
-    theme(legend.justification=c(1,0), legend.position=c(1,0.7), legend.title=element_text(size=30), legend.text=element_text(size=30), legend.key = element_rect(size = 3), legend.key.size = unit(2.5, 'lines')) +
+    theme(legend.justification=c(1,0), legend.position=c(0.2,0.2), legend.title=element_text(size=30), legend.text=element_text(size=30), legend.key = element_rect(size = 3), legend.key.size = unit(2.5, 'lines')) +
     guides(size = FALSE)
     
-finalPlot
+#finalPlot
