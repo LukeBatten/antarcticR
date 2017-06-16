@@ -4,13 +4,14 @@
 \alias{plotAntarctica}
 \title{Plot points on the antarctic map}
 \usage{
-plotAntarctica(antMap, df, clusterPlot = FALSE, pointSize = 2,
-  shapes = TRUE, newSetPlot = 0)
+plotAntarctica(antMap, df, clusterPlot = FALSE, selfClusterPlot = FALSE,
+  pointSize = 2, shapes = TRUE, newSetPlot = 0, BEDMAP = FALSE,
+  BEDMAP_GRAD = "thickness", reduceResolutionBy = 5)
 }
 \arguments{
 \item{antMap}{your map made from drawAntarctica}
 
-\item{df}{Your data frame}
+\item{df}{Your lon/lat data frame}
 }
 \description{
 Plot points on the antarctic map

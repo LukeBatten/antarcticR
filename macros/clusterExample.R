@@ -2,22 +2,25 @@
 require(antarcticR)
 
 ## produce a latitude-longitude dataframe froma .csv file: used to look at the actually long-lat positions
-dataFrame <- csvToDF("../data/examplePoints.csv")
+dataFrame <- csvToDF("../../areaSigmaList.csv")
 
 ## generate a Haversine Matrix from the lat-long dataFrame
 havMat <- genHaversineMat(dataFrame)
-head(havMat)
+#havMat
+
+testingMat <- as.matrix(havMat)
 
 antarcticMap <- drawAntarctica()
 #antarcticMap
 
 ## Perform clustering
-blob<- clusterResult(havMat, 200000, 2, 70000)
+blob<- clusterResult(havMat, 200000, 2, 80000)
+#blob$clusterp
 
 dataFrame$clust <- blob$cluster
-                                        #dataFrame$clust
 
-dataFrame
+unclustered <- dataFrame[ which(dataFrame$clust == 0), ]
+#unclustered
 
-mapWResults <- plotAntarctica(antarcticMap, dataFrame, clusterPlot=TRUE, pointSize = 5, shapes=TRUE)
+mapWResults <- plotAntarctica(antarcticMap, dataFrame, clusterPlot=TRUE, BEDMAP=TRUE, pointSize = 7, shapes=TRUE)
 mapWResults
