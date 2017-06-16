@@ -1,5 +1,6 @@
 # antarcticR
 Antarctica R package for visualisation, clustering.
+
 The BEDMAP2 data can now be used to plot ice thickness / surface height etc.
 
 Example output:
