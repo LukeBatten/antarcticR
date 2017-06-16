@@ -292,16 +292,6 @@ clusterResult = function(haversineMatrix, eps=200000, minPts,eps_cl)
 ##
 ##
 
-getBEDMAP2data = function()
-{
-
-    system(wget https://secure.antarctica.ac.uk/data/bedmap2/bedmap2_bin.zip)
-    system(mv bedmap2_bin.zip ../data/))
-    zipF <- bedmap2_bin.zip
-    unzip(zipF)
-    
-}
-
 ###
 #' A function to convert from lon/lat to the BEDMAP grid
 #'
