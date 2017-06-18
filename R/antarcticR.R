@@ -55,7 +55,6 @@ genCartesianMat = function(df)
     xyzDataFrame <- data.frame(x,y,z)
     
     distMat <- dist(xyzDataFrame, method = "euclidean")
-    
 }
 
 #' A function to generate a Haversine matrix from a csv file
@@ -166,8 +165,11 @@ plotAntarctica = function(antMap, df, clusterPlot=FALSE, selfClusterPlot=FALSE, 
     }
 ###
 
-    BMgradient <- aggregate(BMgradient, fact=reduceResolutionBy, fun=max)
-
+    if(reduceResolutionBy > 1)
+        {
+            BMgradient <- aggregate(BMgradient, fact=reduceResolutionBy, fun=max)
+        }
+    
     if(BEDMAP==TRUE)
     {
         p <- rasterToPoints(BMgradient)
@@ -244,12 +246,15 @@ plotAntarctica = function(antMap, df, clusterPlot=FALSE, selfClusterPlot=FALSE, 
     else if(selfClusterPlot == TRUE) ## shows those which clustered and those which did not only
     {
 
-        unclustered <- df[ which(df$clust == 0), ]
-        clustered <- df[ which(df$clust != 0), ]
-        
-        mapWResults <- antarcticMap +
-            geom_point(data = clustered, aes(x = long, y = lat), color="dodgerblue1", size=pointSize) +
-            geom_point(data = unclustered, aes(x = long, y = lat), size=pointSize)
+        if(BEDMAP==FALSE)
+        {
+            unclustered <- df[ which(df$clust == 0), ]
+            clustered <- df[ which(df$clust != 0), ]
+            
+            mapWResults <- antarcticMap +
+                geom_point(data = clustered, aes(x = long, y = lat), color="dodgerblue1", size=pointSize) +
+                geom_point(data = unclustered, aes(x = long, y = lat), size=pointSize)
+        }
     }
 
     else
