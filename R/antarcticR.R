@@ -121,6 +121,53 @@ drawAntarctica = function()
     world3 <- world2 + coord_map("ortho", orientation=c(-90, 0, 0)) 
 }
 
+drawBedmap = function(BEDMAP_GRAD = "thickness",reduceResolutionBy=5)
+{
+
+    library(raster)
+### BEDMAP2 options
+    if(BEDMAP_GRAD=="bed")
+    {
+        BMgradient=raster("../data/bedmap2_bin/bedmap2_bed.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
+    }
+    
+    if(BEDMAP_GRAD=="cov")
+    {
+        BMgradient=raster("../data/bedmap2_bin/bedmap2_coverage.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
+    }
+
+    if(BEDMAP_GRAD=="thickness")
+    {
+        BMgradient=raster("../data/bedmap2_bin/bedmap2_thickness.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
+        
+    }
+    if(BEDMAP_GRAD=="surface")
+    {
+        BMgradient=raster("../data/bedmap2_bin/bedmap2_surface.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
+    }
+    if(BEDMAP_GRAD=="icemask")
+    {
+        BMgradient=raster("../data/bedmap2_bin/bedmap2_icemask_grounded_and_shelves.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
+    }
+    if(BEDMAP_GRAD=="rockmask")
+    {
+        BMgradient=raster("../data/bedmap2_bin/bedmap2_rockmask.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
+    }
+###
+
+    if(reduceResolutionBy > 1)
+    {        
+        BMgradient <- aggregate(BMgradient, fact=reduceResolutionBy, fun=max)
+    }
+    
+    p <- rasterToPoints(BMgradient)
+    bmdf <- data.frame(p)
+    colnames(bmdf) <- c("x", "y", "varFill")
+    bedMap <- ggplot(data=bmdf) + geom_tile(aes(x,y,fill=varFill)) +
+        guides(fill=guide_legend(title=BEDMAP_GRAD))
+    
+}
+
 ###
 #' Plot points on the antarctic map 
 #'

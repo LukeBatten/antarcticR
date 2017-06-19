@@ -22,5 +22,5 @@ dataFrame$clust <- blob$cluster
 unclustered <- dataFrame[ which(dataFrame$clust == 0), ]
 #unclustered
 
-mapWResults <- plotAntarctica(antarcticMap, dataFrame, clusterPlot=TRUE, BEDMAP=TRUE, pointSize = 7, shapes=TRUE,BEDMAP_GRAD="thickness",reduceResolutionBy=1.5)
+mapWResults <- plotAntarctica(antarcticMap, dataFrame, clusterPlot=TRUE, BEDMAP=TRUE, pointSize = 7, shapes=TRUE,BEDMAP_GRAD="thickness",reduceResolutionBy=5)
 mapWResults

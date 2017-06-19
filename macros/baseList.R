@@ -20,6 +20,6 @@ campsStations <- csvToDF("~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/c
 
 #### Function here to turn lats + cardinalities into 
 
-campsStations
+campsStations[50,]
 
 #### Then convert to Easting/Northing.
