@@ -121,6 +121,16 @@ drawAntarctica = function()
     world3 <- world2 + coord_map("ortho", orientation=c(-90, 0, 0)) 
 }
 
+###
+#' Set up the drawing of a map of Antarctica BEDMAP2
+#'
+#' @return 
+#' @keywords draw, Antarctica, plot
+#' @export
+#' @examples world3 <- drawAntarctica()
+#' world3
+
+
 drawBedmap = function(BEDMAP_GRAD = "thickness",reduceResolutionBy=5)
 {
 
@@ -128,17 +138,17 @@ drawBedmap = function(BEDMAP_GRAD = "thickness",reduceResolutionBy=5)
 ### BEDMAP2 options
     if(BEDMAP_GRAD=="bed")
     {
-        BMgradient=raster("../data/bedmap2_bin/bedmap2_bed.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
+        BMgradient=raster("/home/berg/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR/data/bedmap2_bin/bedmap2_bed.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
     }
     
     if(BEDMAP_GRAD=="cov")
     {
-        BMgradient=raster("../data/bedmap2_bin/bedmap2_coverage.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
+        BMgradient=raster("/home/berg/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR/data/bedmap2_bin/bedmap2_coverage.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
     }
 
     if(BEDMAP_GRAD=="thickness")
     {
-        BMgradient=raster("../data/bedmap2_bin/bedmap2_thickness.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
+        BMgradient=raster("/home/berg/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR/data/bedmap2_bin/bedmap2_thickness.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
         
     }
     if(BEDMAP_GRAD=="surface")
@@ -195,7 +205,7 @@ plotAntarctica = function(antMap, df, clusterPlot=FALSE, selfClusterPlot=FALSE, 
 
     if(BEDMAP_GRAD=="thickness")
     {
-        BMgradient=raster("../data/bedmap2_bin/bedmap2_thickness.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
+        BMgradient=raster("/home/berg/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR/data/bedmap2_bin/bedmap2_thickness.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
         
     }
     if(BEDMAP_GRAD=="surface")
