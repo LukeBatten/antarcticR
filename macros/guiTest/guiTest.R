@@ -15,7 +15,7 @@ ui <- pageWithSidebar(
     headerPanel("antarcticR online"),
     
     sidebarPanel(
-        HTML("Antarctic base list visualiser."),
+        HTML("Online visualiser for Antarctica."),
         width = 3
     ),
     
@@ -26,7 +26,7 @@ ui <- pageWithSidebar(
         div(
             style = "position:relative",
             plotOutput("scatterplot", 
-                       hover = hoverOpts("plot_hover", delay = 100, delayType = "debounce")),
+                       hover = hoverOpts("plot_hover", delay = 10, delayType = "debounce")),
             uiOutput("hover_info")
         ),
         width = 7
@@ -61,12 +61,37 @@ server <- function(input, output) {
     world4 <- plotAntarctica(antMap, antFrame, pointSize=5, shapes=FALSE, BEDMAP=TRUE,BEDMAP_GRAD="thickness")
     ##world4
 
-### 
+    library(ggplot2)
+    library(rgdal)
+    print("Reading the map..")
+    world <- map_data("world") 
+            world2 <- ggplot() + 
+            geom_polygon(data = world, aes(x=long, y = lat, group = group), fill = "white", color = "blue")
+                                        # Rotate world map to focus on Antarctica
+        print("Transform world map to focus on Antarctica")
+        world3 <- world2 + coord_map("ortho", orientation=c(-90, 0, 0)) 
+
+    testWorld <- world3 + geom_point(data = antFrame, aes(x = long, y = lat, col=lat), size=5)
+    
+    ##output$scatterplot <- renderPlot({
+    ##ggplot(antFrame, aes(x=long, y = lat,color=lat)) +
+    ##geom_point()
+    ##})
+
+    ##output$scatterplot <- renderPlot({
+        ##testWorld
+    ##})
+
     output$scatterplot <- renderPlot({
-        ggplot(antFrame, aes(x=long, y = lat,color=lat)) +
-            geom_point()
+        world4
     })
 
+    
+### 
+    ##    output$scatterplot <- renderPlot({
+    ##       ggplot(antFrame, aes(x=long, y = lat,color=lat)) +
+    ##          geom_point()
+    ## })
     
     output$hover_info <- renderUI({
         hover <- input$plot_hover
