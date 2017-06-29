@@ -7,18 +7,15 @@ ui <- pageWithSidebar(
     headerPanel("antarcticR online"),
     
     sidebarPanel(
-        HTML("Online visualiser for Antarctica."),
+        HTML("An online companion to the antarcticR package. Online visualiser for Antarctica."),
         width = 3
     ),
     
     mainPanel(
-        
-                                        # this is an extra div used ONLY to create positioned ancestor for tooltip
-                                        # we don't change its position
         div(
             style = "position:relative",
             plotOutput("scatterplot", 
-                       hover = hoverOpts("plot_hover", delay = 100, delayType = "debounce")),
+                       hover = hoverOpts("plot_hover", delay = 10, delayType = "debounce")),
             uiOutput("hover_info")
         ),
         width = 7
@@ -60,9 +57,11 @@ server <- function(input, output) {
     
     output$scatterplot <- renderPlot({
         ggplot()+
-            geom_point(data = antFrame, aes(x = easting, y = northing), size=3, color="green") +
+            geom_point(data = antFrame, aes(x = easting, y = northing), size=2, color="red") +
             geom_tile(data=bmdf,aes(bbb,ccc,fill=varFillBBB)) +
-            geom_point(data = antFrame, aes(x = easting, y = northing), size=3, color="green")
+            geom_point(data = antFrame, aes(x = easting, y = northing), size=2, color="red") +
+            guides(fill=guide_legend(title="thickness"))
+
     })
 
 ######
@@ -93,10 +92,14 @@ server <- function(input, output) {
                                         # actual tooltip created as wellPanel
             wellPanel(
                 style = style,
-                p(HTML(paste0("<b> name: </b>", point$name, "<br/>",
+                p(HTML(paste0("<b> Name: </b>", point$name, "<br/>",
+                              "<b> Primary operator: </b>", point$primaryOperator, "<br/>",
+                              "<b> Established: </b>", point$est, "<br/>",
+                              "<b> Facility Type: </b>", point$facType, "<br/>",
                               "<b> Seasonality: </b>", point$seasonality, "<br/>",
-                              "<b> long: </b>", point$long, "<br/>",
-                              "<b> lat: </b>", point$lat, "<br/>"))))
+                              "<b> Altitude: </b>", point$alt, "<br/>",
+                              "<b> Longitude: </b>", point$long, "<br/>",
+                              "<b> Latitude: </b>", point$lat, "<br/>"))))
         }
     })
 
