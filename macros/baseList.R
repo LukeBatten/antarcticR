@@ -43,7 +43,4 @@ antFrame  <- longLatToSimpleBEDMAP(antFrame)
 antFrame[1:20,]
 
 world4 <- plotAntarctica(antMap, antFrame, pointSize=5, shapes=FALSE, BEDMAP=TRUE,BEDMAP_GRAD="thickness")
-##world4
-
-#### Then convert to Easting/Northing.
-
+world4

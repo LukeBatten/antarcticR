@@ -26,7 +26,7 @@ ui <- pageWithSidebar(
         div(
             style = "position:relative",
             plotOutput("scatterplot", 
-                       hover = hoverOpts("plot_hover", delay = 10, delayType = "debounce")),
+                       hover = hoverOpts("plot_hover", delay = 100, delayType = "debounce")),
             uiOutput("hover_info")
         ),
         width = 7
@@ -57,64 +57,17 @@ server <- function(input, output) {
     antFrame  <- longLatToSimpleBEDMAP(antFrame)
 
     antFrame
-    
-    ##worldBM <- plotAntarctica(antMap, antFrame, pointSize=5, shapes=FALSE, BEDMAP=TRUE,BEDMAP_GRAD="thickness") ## Doesnt work
 
-    ## Replacement blah blah
-
-    library(ggplot2)
-    library(rgdal)
-    print("Reading the map..")
-    world <- map_data("world") 
-            world2 <- ggplot() + 
-            geom_polygon(data = world, aes(x=long, y = lat, group = group), fill = "white", color = "blue")
-                                        # Rotate world map to focus on Antarctica
-        print("Transform world map to focus on Antarctica")
-        world3 <- world2 + coord_map("ortho", orientation=c(-90, 0, 0)) 
-    testWorld <- world3 + geom_point(data = antFrame, aes(x = long, y = lat, col=lat), size=5)
-    
     output$scatterplot <- renderPlot({
     ggplot(antFrame, aes(x=long, y = lat,color=lat)) +
     geom_point()
     })
 
-    ##output$scatterplot <- renderPlot({
-        ##testWorld
-    ##})
-
-    library(raster)
-    
-    BMgradient=raster("/home/berg/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR/data/bedmap2_bin/bedmap2_thickness.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
-
-    BMgradient <- aggregate(BMgradient, fact=100, fun=max)
-
-    p <- rasterToPoints(BMgradient)
-    bmdf <- data.frame(p)
-    colnames(bmdf) <- c("x", "y", "varFill")
-    finalFrame <- longLatToSimpleBEDMAP(antFrame)
-    bedMap <- ggplot(data=bmdf) + geom_tile(aes(x,y,fill=varFill)) +
-        guides(fill=guide_legend(title="thickness"))
-
-    worldBM <- bedMap +
-        geom_point(data = finalFrame, aes(x = easting, y = northing), size=5, color="red")
-    
-    output$scatterplot <- renderPlot({
-        worldBM
-    })
-
-    
-### 
-    ##    output$scatterplot <- renderPlot({
-    ##       ggplot(antFrame, aes(x=long, y = lat,color=lat)) +
-    ##          geom_point()
-    ## })
-    
     output$hover_info <- renderUI({        
-        hover <- input$plot_hover
+        hover <- input$plot_hover       
+        point <- nearPoints(antFrame, threshold=10000, maxpoints=1, hover, addDist = TRUE)
         
-        point <- nearPoints(finalFrame, xvar=finalFrame$easting, yvar=finalFrame$northing, threshold=10000, maxpoints=1, hover, addDist = TRUE)
-        
-        if(0)
+        if(1)
         {
             
         if (nrow(point) == 0) return(NULL)
@@ -126,7 +79,7 @@ server <- function(input, output) {
         left_px <- hover$range$left + left_pct * (hover$range$right - hover$range$left)
         top_px <- hover$range$top + top_pct * (hover$range$bottom - hover$range$top)
         
-                                        # create style property fot tooltip
+                                        # create style property for tooltip
                                         # background color is set so tooltip is a bit transparent
                                         # z-index is set so we are sure are tooltip will be on top
         style <- paste0("position:absolute; z-index:100; background-color: rgba(245, 245, 245, 0.85); ",
@@ -137,8 +90,8 @@ server <- function(input, output) {
             style = style,
             p(HTML(paste0("<b> name: </b>", point$name, "<br/>",
                           "<b> Seasonality: </b>", point$seasonality, "<br/>",
-                          "<b> long: </b>", point$easting, "<br/>",
-                          "<b> lat: </b>", point$northing, "<br/>"))))
+                          "<b> long: </b>", point$long, "<br/>",
+                          "<b> lat: </b>", point$lat, "<br/>"))))
                 }
     })
 }
