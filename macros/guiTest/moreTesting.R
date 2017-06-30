@@ -4,12 +4,17 @@ library("shiny")
 library("antarcticR")
 library("Cairo")
 
+########## TO DO##
+## Radio buttons for type of bedmap 2 data
+#################
+
 ui <- pageWithSidebar(
     
     headerPanel("antarcticR online"),
     
     sidebarPanel(
         HTML("An online companion to the antarcticR package. Online visualiser for Antarctica."),
+        a("Full repository here", href="https://github.com/LukeBatten/antarcticR", target="_blank"), ## Private current, so it won't load for other users
         width = 3
     ),
     
@@ -74,6 +79,7 @@ server <- function(input, output) {
             coord_cartesian(xlim = ranges$easting, ylim = ranges$northing, expand = FALSE) ## Needed for zooming
 
     })
+    
 
 ######
 
@@ -135,7 +141,7 @@ server <- function(input, output) {
     
     
     
-}
+} ## server end
 
 print("Processed code")
 
