@@ -8,15 +8,15 @@ library("Cairo")
 ## Radio buttons for type of bedmap 2 data
 #################
 
-ui <- pageWithSidebar(
+ui <- fluidPage(
     
-    headerPanel("antarcticR online"),
+    headerPanel(HTML(paste("antarcticR",tags$sup("online")))),
     
     sidebarPanel(
         HTML("An online companion to the antarcticR package. Online visualiser for Antarctica."),
         a("Full repository here", href="https://github.com/LukeBatten/antarcticR", target="_blank"), ## Private current, so it won't load for other users
         width = 3
-    ),
+   ),   
     
     mainPanel(
         div(
@@ -32,8 +32,21 @@ ui <- pageWithSidebar(
             uiOutput("hover_info")
         ),
         width = 7
-    )
-)
+    ),
+
+   column(4,
+      radioButtons("radio", label = h5("Map choice"),
+        choices = list("Ice thickness" = 1, "Bed" = 2,
+                       "Surface" = 3, "Icemask" = 4), selected = 1)),
+
+   
+   column(3, 
+      sliderInput("slider1", label = h3("Sliders"),
+        min = 0, max = 100, value = 0)
+      )
+
+   
+) ## UI end
 
 server <- function(input, output) {
 
