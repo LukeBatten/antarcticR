@@ -2,6 +2,7 @@ library("dplyr")
 library("ggplot2")
 library("shiny")
 library("antarcticR")
+library("Cairo")
 
 ui <- pageWithSidebar(
     
@@ -16,7 +17,13 @@ ui <- pageWithSidebar(
         div(
             style = "position:relative",
             plotOutput("scatterplot", 
-                       hover = hoverOpts("plot_hover", delay = 10, delayType = "debounce")),
+                       hover = hoverOpts("plot_hover", delay = 10, delayType = "debounce"),
+                       dblclick = "scatterplot_dblclick",
+                       brush = brushOpts(
+                           id = "scatterplot_brush",
+                           resetOnNew = TRUE
+                       )
+                       ),
             uiOutput("hover_info")
         ),
         width = 7
@@ -50,7 +57,7 @@ server <- function(input, output) {
     BMgradient=raster("/home/berg/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR/data/bedmap2_bin/bedmap2_thickness.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
     
     BMgradient <- aggregate(BMgradient, fact=10, fun=max)
-        
+    
     p <- rasterToPoints(BMgradient)
     bmdf <- data.frame(p)
     colnames(bmdf) <- c("bbb", "ccc", "varFillBBB")
@@ -61,7 +68,8 @@ server <- function(input, output) {
             geom_point(data = antFrame, aes(x = easting, y = northing), size=2, color="red") +
             geom_tile(data=bmdf,aes(bbb,ccc,fill=varFillBBB)) +
             geom_point(data = antFrame, aes(x = easting, y = northing), size=2, color="red") +
-            guides(fill=guide_legend(title="ice thickness"))
+            guides(fill=guide_legend(title="ice thickness")) +
+            coord_cartesian(xlim = ranges$easting, ylim = ranges$northing, expand = FALSE)
 
     })
 
@@ -69,6 +77,20 @@ server <- function(input, output) {
 
 ###### ZOOM in
 
+    ranges <- reactiveValues(easting = NULL, northing = NULL)
+    
+    observeEvent(input$scatterplot_dblclick, {
+        brush <- input$scatterplot_brush
+        if (!is.null(brush)) {
+            ranges$easting <- c(brush$xmin, brush$xmax)
+            ranges$northing <- c(brush$ymin, brush$ymax)
+
+        } else {
+            ranges$easting <- NULL
+            ranges$northing <- NULL
+        }
+    })
+    
 ###### Hover
 
     output$hover_info <- renderUI({        

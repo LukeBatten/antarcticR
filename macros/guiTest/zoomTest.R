@@ -2,18 +2,10 @@ library(ggplot2)
 library(Cairo)   # For nicer ggplot2 output when deployed on Linux
 library(shiny)
 
-ui <- fluidPage(width = 4, class = "well",
-      h4("Brush and double-click to zoom"),
-      plotOutput("plot1", height = 300,
-        dblclick = "plot1_dblclick",
-        brush = brushOpts(
-          id = "plot1_brush",
-          resetOnNew = TRUE
-        )
-     
-      
-  )
-)
+ui <- fluidPage(width = 4, h4("Drag and then double-click to zoom"),
+                plotOutput("plot1", height = 300,dblclick = "plot1_dblclick",brush = brushOpts(id = "plot1_brush",resetOnNew = TRUE)
+                           )
+                )
 
 server <- function(input, output) {
 
