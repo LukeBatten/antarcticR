@@ -55,8 +55,10 @@ server <- function(input, output) {
     antFrame  <- longLatToSimpleBEDMAP(antFrame)
 
     BMgradient=raster("/home/berg/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR/data/bedmap2_bin/bedmap2_thickness.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
+
+    resolutionFactor <- 5
     
-    BMgradient <- aggregate(BMgradient, fact=10, fun=max)
+    BMgradient <- aggregate(BMgradient, fact=resolutionFactor, fun=max)
     
     p <- rasterToPoints(BMgradient)
     bmdf <- data.frame(p)
@@ -69,7 +71,7 @@ server <- function(input, output) {
             geom_tile(data=bmdf,aes(bbb,ccc,fill=varFillBBB)) +
             geom_point(data = antFrame, aes(x = easting, y = northing), size=2, color="red") +
             guides(fill=guide_legend(title="ice thickness")) +
-            coord_cartesian(xlim = ranges$easting, ylim = ranges$northing, expand = FALSE)
+            coord_cartesian(xlim = ranges$easting, ylim = ranges$northing, expand = FALSE) ## Needed for zooming
 
     })
 
