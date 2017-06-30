@@ -16,11 +16,11 @@ ui <- pageWithSidebar(
     mainPanel(
         div(
             style = "position:relative",
-            plotOutput("scatterplot", 
+            plotOutput("antarcticCanvas", 
                        hover = hoverOpts("plot_hover", delay = 10, delayType = "debounce"),
-                       dblclick = "scatterplot_dblclick",
+                       dblclick = "antarcticCanvas_dblclick",
                        brush = brushOpts(
-                           id = "scatterplot_brush",
+                           id = "antarcticCanvas_brush",
                            resetOnNew = TRUE
                        )
                        ),
@@ -56,7 +56,7 @@ server <- function(input, output) {
 
     BMgradient=raster("/home/berg/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR/data/bedmap2_bin/bedmap2_thickness.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
 
-    resolutionFactor <- 5
+    resolutionFactor <- 5 ## The best is 1, but this is mega slow
     
     BMgradient <- aggregate(BMgradient, fact=resolutionFactor, fun=max)
     
@@ -65,7 +65,7 @@ server <- function(input, output) {
     colnames(bmdf) <- c("bbb", "ccc", "varFillBBB")
     ##bedMap <- ggplot() + geom_tile(data=bmdf,aes(bbb,ccc,fill=varFillBBB))
     
-    output$scatterplot <- renderPlot({
+    output$antarcticCanvas <- renderPlot({
         ggplot()+
             geom_point(data = antFrame, aes(x = easting, y = northing), size=2, color="red") +
             geom_tile(data=bmdf,aes(bbb,ccc,fill=varFillBBB)) +
@@ -81,8 +81,8 @@ server <- function(input, output) {
 
     ranges <- reactiveValues(easting = NULL, northing = NULL)
     
-    observeEvent(input$scatterplot_dblclick, {
-        brush <- input$scatterplot_brush
+    observeEvent(input$antarcticCanvas_dblclick, {
+        brush <- input$antarcticCanvas_brush
         if (!is.null(brush)) {
             ranges$easting <- c(brush$xmin, brush$xmax)
             ranges$northing <- c(brush$ymin, brush$ymax)
