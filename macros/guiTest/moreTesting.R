@@ -4,6 +4,7 @@ library("shiny")
 library("antarcticR")
 
 ui <- pageWithSidebar(
+    
     headerPanel("antarcticR online"),
     
     sidebarPanel(
@@ -60,11 +61,15 @@ server <- function(input, output) {
             geom_point(data = antFrame, aes(x = easting, y = northing), size=2, color="red") +
             geom_tile(data=bmdf,aes(bbb,ccc,fill=varFillBBB)) +
             geom_point(data = antFrame, aes(x = easting, y = northing), size=2, color="red") +
-            guides(fill=guide_legend(title="thickness"))
+            guides(fill=guide_legend(title="ice thickness"))
 
     })
 
 ######
+
+###### ZOOM in
+
+###### Hover
 
     output$hover_info <- renderUI({        
         hover <- input$plot_hover
