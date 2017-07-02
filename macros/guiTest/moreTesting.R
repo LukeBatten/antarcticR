@@ -41,7 +41,7 @@ ui <- fluidPage(
     
     column(3, 
            sliderInput("sliderRes", label = h5("Resolution reduction"),
-                       min = 2, max = 100, value = 10)
+                       min = 2, max = 100, value = 20)
            )
     
 ) ## UI end
@@ -75,6 +75,11 @@ shinyServer <- function(input, output) {
 
     antFrame <- mutate( antFrame, long = ifelse(longCar == "E", longDeg + (longMin)/60, -longDeg - (longMin)/60) )
     antFrame  <- longLatToSimpleBEDMAP(antFrame)
+
+    antFrame <- transform(antFrame, facType = ifelse(facType == "X", "Unknown", as.character(facType)))
+    antFrame <- transform(antFrame, seasonality = ifelse(seasonality == "X", "Unknown" , as.character(seasonality)))
+    antFrame <- transform(antFrame, est = ifelse(est == -999, "Unknown", est))
+    antFrame <- transform(antFrame, alt = ifelse(alt == -999, "Unknown", alt))
     
 #### ^ base selection
     
