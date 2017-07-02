@@ -33,14 +33,20 @@ ui <- fluidPage(
         ),
         width = 7
     ),
-
-   column(1,
+   
+    column(1, 
+      checkboxGroupInput("checkGroup", 
+        label = h5("Base list"), 
+        choices = list("ANITA-3 (2014-2015)" = 1, 
+           "ANITA-4 (2016)" = 2),
+        selected = 2)),
+   
+   column(2,
       radioButtons("radio", label = h5("Map choice"),
         choices = list("Ice thickness" = 1, "Bed" = 2,
-                       "Surface" = 3, "Icemask" = 4), selected = 1)),
-
+                       "Surface" = 3, "Icemask" = 4), selected = 2)),
    
-   column(2, 
+   column(3, 
       sliderInput("sliderRes", label = h5("Resolution reduction"),
         min = 1, max = 100, value = 5)
       )
@@ -49,45 +55,72 @@ ui <- fluidPage(
 
 shinyServer <- function(input, output) {
 
-
     csvFile <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-A3-unrestricted.csv.0"
+    csvFileA4 <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-A4-unrestricted.csv.0"
 
-#### Function here to turn lats + cardinalities into 
+#### Function here to turn lats + cardinalities into
 
-    points <- read.csv(csvFile, header=0, sep=",")
-    df.points <- as.matrix(points)
-    antFrame <- data.frame(df.points)#long=df.points$long, lat=df.points$lat)
-
-    colnames(antFrame) = c("name", "latDeg", "latMin", "latCar", "longDeg", "longMin", "longCar", "alt", "altCert", "primaryOperator", "est", "facType", "seasonality")
-
-    antFrame$latDeg <- as.numeric(as.character(antFrame$latDeg))
-    antFrame$latMin <- as.numeric(as.character(antFrame$latMin))
-    antFrame$lat <- -antFrame$latDeg - antFrame$latMin/60
-
-    antFrame$longDeg <- as.numeric(as.character(antFrame$longDeg))
-    antFrame$longMin <- as.numeric(as.character(antFrame$longMin))
-    antFrame$longCar <- as.character(antFrame$longCar)
-
-    antFrame <- mutate( antFrame, long = ifelse(longCar == "E", longDeg + (longMin)/60, -longDeg - (longMin)/60) )
-    antFrame  <- longLatToSimpleBEDMAP(antFrame)
-
-    BMgradient=raster("/home/berg/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR/data/bedmap2_bin/bedmap2_thickness.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
+    a <- 2
     
-    ##resolutionFactor <- input$sliderRes ## The best is 1, but this is mega slow
-    
-    ##resolutionFactor <- input$sliderRes
-    
-    resolutionFactor <- 5
-    
-    BMgradient <- aggregate(BMgradient, fact=resolutionFactor, fun=max)
-    
-    p <- rasterToPoints(BMgradient)
-    bmdf <- data.frame(p)
-    colnames(bmdf) <- c("bbb", "ccc", "varFillBBB")
+    if(a == 1)
+    {
+        
+        points <- read.csv(csvFile, header=0, sep=",")
+        df.points <- as.matrix(points)
+        antFrame <- data.frame(df.points)#long=df.points$long, lat=df.points$lat)
+
+        colnames(antFrame) = c("name", "latDeg", "latMin", "latCar", "longDeg", "longMin", "longCar", "alt", "altCert", "primaryOperator", "est", "facType", "seasonality")
+
+        antFrame$latDeg <- as.numeric(as.character(antFrame$latDeg))
+        antFrame$latMin <- as.numeric(as.character(antFrame$latMin))
+        antFrame$lat <- -antFrame$latDeg - antFrame$latMin/60
+
+        antFrame$longDeg <- as.numeric(as.character(antFrame$longDeg))
+        antFrame$longMin <- as.numeric(as.character(antFrame$longMin))
+        antFrame$longCar <- as.character(antFrame$longCar)
+
+        antFrame <- mutate( antFrame, long = ifelse(longCar == "E", longDeg + (longMin)/60, -longDeg - (longMin)/60) )
+        antFrame  <- longLatToSimpleBEDMAP(antFrame)
+    }
+
+    if(a == 2)
+    {
+
+        points <- read.csv(csvFileA4, header=0, sep=",")
+        df.points <- as.matrix(points)
+        antFrame <- data.frame(df.points)#long=df.points$long, lat=df.points$lat)
+
+        colnames(antFrame) = c("name", "latDeg", "latMin", "latCar", "longDeg", "longMin", "longCar", "alt", "altCert", "primaryOperator", "est", "facType", "seasonality", "current status")
+
+        antFrame$latDeg <- as.numeric(as.character(antFrame$latDeg))
+        antFrame$latMin <- as.numeric(as.character(antFrame$latMin))
+        antFrame$lat <- -antFrame$latDeg - antFrame$latMin/60
+
+        antFrame$longDeg <- as.numeric(as.character(antFrame$longDeg))
+        antFrame$longMin <- as.numeric(as.character(antFrame$longMin))
+        antFrame$longCar <- as.character(antFrame$longCar)
+
+        antFrame <- mutate( antFrame, long = ifelse(longCar == "E", longDeg + (longMin)/60, -longDeg - (longMin)/60) )
+        antFrame  <- longLatToSimpleBEDMAP(antFrame)
+        
+    }
+
+    ####
     
     output$antarcticCanvas <- renderPlot({
+
+        BMgradient=raster("/home/berg/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR/data/bedmap2_bin/bedmap2_thickness.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
+        
+        resolutionFactor <- input$sliderRes
+        
+        BMgradient <- aggregate(BMgradient, fact=resolutionFactor, fun=max)
+        
+        p <- rasterToPoints(BMgradient)
+        bmdf <- data.frame(p)
+        colnames(bmdf) <- c("bbb", "ccc", "varFillBBB")
+        
         ggplot()+
-            geom_point(data = antFrame, aes(x = easting, y = northing), size=2, color="red") +
+            geom_point(data = antFrame, aes(x = easting, y = northing)) +
             geom_tile(data=bmdf,aes(bbb,ccc,fill=varFillBBB)) +
             geom_point(data = antFrame, aes(x = easting, y = northing), size=2, color="red") +
             guides(fill=guide_legend(title="ice thickness")) +
