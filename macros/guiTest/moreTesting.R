@@ -78,8 +78,8 @@ shinyServer <- function(input, output) {
 
     antFrame <- transform(antFrame, facType = ifelse(facType == "X", "Unknown", as.character(facType)))
     antFrame <- transform(antFrame, seasonality = ifelse(seasonality == "X", "Unknown" , as.character(seasonality)))
-    antFrame <- transform(antFrame, est = ifelse(est == -999, "Unknown", est))
-    antFrame <- transform(antFrame, alt = ifelse(alt == -999, "Unknown", alt))
+    antFrame <- transform(antFrame, est = ifelse(est == -999, "Unknown", as.numeric(est)))
+    antFrame <- transform(antFrame, alt = ifelse(alt == -999, "Unknown", as.numeric(alt)))
     
 #### ^ base selection
     
