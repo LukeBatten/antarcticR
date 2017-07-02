@@ -16,7 +16,7 @@ ui <- fluidPage(
         HTML("An online companion to the antarcticR package. Online visualiser for Antarctica."),
         a("Full repository here", href="https://github.com/LukeBatten/antarcticR", target="_blank"), ## Private current, so it won't load for other users
         width = 3
-   ),   
+    ),   
     
     mainPanel(
         div(
@@ -33,24 +33,21 @@ ui <- fluidPage(
         ),
         width = 7
     ),
-   
-    column(1, 
-      checkboxGroupInput("checkGroup", 
-        label = h5("Base list"), 
-        choices = list("ANITA-3 (2014-2015)" = 1, 
-           "ANITA-4 (2016)" = 2),
-        selected = 2)),
-   
-   column(2,
-      radioButtons("radio", label = h5("Map choice"),
-        choices = list("Ice thickness" = 1, "Bed" = 2,
-                       "Surface" = 3, "Icemask" = 4), selected = 2)),
-   
-   column(3, 
-      sliderInput("sliderRes", label = h5("Resolution reduction"),
-        min = 1, max = 100, value = 5)
-      )
-   
+
+##    column(1,
+      ##     radioButtons("bList", label = h5("Base list"),
+            ##r            choices = list("ANITA-3 (2014-15)" = 1, "ANITA 4 (2017)" = 2), selected = 2)),
+    
+    column(2,
+           radioButtons("bedmapChoice", label = h5("Map choice"),
+                        choices = list("Ice thickness" = 1, "Bed" = 2,
+                                       "Surface" = 3, "Icemask" = 4), selected = 1)),
+    
+    column(3, 
+           sliderInput("sliderRes", label = h5("Resolution reduction"),
+                       min = 2, max = 100, value = 5)
+           )
+    
 ) ## UI end
 
 shinyServer <- function(input, output) {
@@ -58,58 +55,47 @@ shinyServer <- function(input, output) {
     csvFile <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-A3-unrestricted.csv.0"
     csvFileA4 <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-A4-unrestricted.csv.0"
 
-#### Function here to turn lats + cardinalities into
+    points <- read.csv(csvFile, header=0, sep=",")
+    df.points <- as.matrix(points)
 
-    a <- 2
-    
-    if(a == 1)
-    {
-        
-        points <- read.csv(csvFile, header=0, sep=",")
-        df.points <- as.matrix(points)
-        antFrame <- data.frame(df.points)#long=df.points$long, lat=df.points$lat)
+    antFrame <- data.frame(df.points)#long=df.points$long, lat=df.points$lat)
 
-        colnames(antFrame) = c("name", "latDeg", "latMin", "latCar", "longDeg", "longMin", "longCar", "alt", "altCert", "primaryOperator", "est", "facType", "seasonality")
+    colnames(antFrame) = c("name", "latDeg", "latMin", "latCar", "longDeg", "longMin", "longCar", "alt", "altCert", "primaryOperator", "est", "facType", "seasonality")
 
-        antFrame$latDeg <- as.numeric(as.character(antFrame$latDeg))
-        antFrame$latMin <- as.numeric(as.character(antFrame$latMin))
-        antFrame$lat <- -antFrame$latDeg - antFrame$latMin/60
+    antFrame$latDeg <- as.numeric(as.character(antFrame$latDeg))
+    antFrame$latMin <- as.numeric(as.character(antFrame$latMin))
+    antFrame$lat <- -antFrame$latDeg - antFrame$latMin/60
 
-        antFrame$longDeg <- as.numeric(as.character(antFrame$longDeg))
-        antFrame$longMin <- as.numeric(as.character(antFrame$longMin))
-        antFrame$longCar <- as.character(antFrame$longCar)
+    antFrame$longDeg <- as.numeric(as.character(antFrame$longDeg))
+    antFrame$longMin <- as.numeric(as.character(antFrame$longMin))
+    antFrame$longCar <- as.character(antFrame$longCar)
 
-        antFrame <- mutate( antFrame, long = ifelse(longCar == "E", longDeg + (longMin)/60, -longDeg - (longMin)/60) )
-        antFrame  <- longLatToSimpleBEDMAP(antFrame)
-    }
+    antFrame <- mutate( antFrame, long = ifelse(longCar == "E", longDeg + (longMin)/60, -longDeg - (longMin)/60) )
+    antFrame  <- longLatToSimpleBEDMAP(antFrame)
 
-    if(a == 2)
-    {
-
-        points <- read.csv(csvFileA4, header=0, sep=",")
-        df.points <- as.matrix(points)
-        antFrame <- data.frame(df.points)#long=df.points$long, lat=df.points$lat)
-
-        colnames(antFrame) = c("name", "latDeg", "latMin", "latCar", "longDeg", "longMin", "longCar", "alt", "altCert", "primaryOperator", "est", "facType", "seasonality", "current status")
-
-        antFrame$latDeg <- as.numeric(as.character(antFrame$latDeg))
-        antFrame$latMin <- as.numeric(as.character(antFrame$latMin))
-        antFrame$lat <- -antFrame$latDeg - antFrame$latMin/60
-
-        antFrame$longDeg <- as.numeric(as.character(antFrame$longDeg))
-        antFrame$longMin <- as.numeric(as.character(antFrame$longMin))
-        antFrame$longCar <- as.character(antFrame$longCar)
-
-        antFrame <- mutate( antFrame, long = ifelse(longCar == "E", longDeg + (longMin)/60, -longDeg - (longMin)/60) )
-        antFrame  <- longLatToSimpleBEDMAP(antFrame)
-        
-    }
-
-    ####
+    #### ^ base selection
     
     output$antarcticCanvas <- renderPlot({
 
-        BMgradient=raster("/home/berg/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR/data/bedmap2_bin/bedmap2_thickness.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
+        if(input$bedmapChoice == 1)
+        {
+            BMgradient=raster("/home/berg/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR/data/bedmap2_bin/bedmap2_thickness.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
+        }
+
+        if(input$bedmapChoice == 2)
+        {
+            BMgradient=raster("/home/berg/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR/data/bedmap2_bin/bedmap2_bed.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
+        }
+
+        if(input$bedmapChoice == 3)
+        {
+            BMgradient=raster("/home/berg/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR/data/bedmap2_bin/bedmap2_surface.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
+        }
+
+        if(input$bedmapChoice == 4)
+        {
+            BMgradient=raster("/home/berg/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR/data/bedmap2_bin/bedmap2_icemask_grounded_and_shelves.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
+        }
         
         resolutionFactor <- input$sliderRes
         
@@ -118,18 +104,16 @@ shinyServer <- function(input, output) {
         p <- rasterToPoints(BMgradient)
         bmdf <- data.frame(p)
         colnames(bmdf) <- c("bbb", "ccc", "varFillBBB")
+
+        ## raster ^
         
         ggplot()+
             geom_point(data = antFrame, aes(x = easting, y = northing)) +
             geom_tile(data=bmdf,aes(bbb,ccc,fill=varFillBBB)) +
             geom_point(data = antFrame, aes(x = easting, y = northing), size=2, color="red") +
-            guides(fill=guide_legend(title="ice thickness")) +
+            guides(fill=guide_legend(title="Gradient")) +
             coord_cartesian(xlim = ranges$easting, ylim = ranges$northing, expand = FALSE) ## Needed for zooming
 
-    })
-
-    output$text1 <- renderText({ 
-        paste("You have selected", input$sliderRes)
     })
     
 
