@@ -64,16 +64,16 @@ shinyServer <- function(input, output) {
     df.points2 <- as.matrix(points2)
     antFrame2 <- data.frame(df.points2)
 
-    ##blob <- data.frame(matrix(nrow=nrow(antFrame2),ncol=ncol(antFrame) - ncol(antFrame2)))
-    ##blob <- transform(blob, X1 = ifelse(is.na(X1), as.character("Unknown"), X1)) ## altCert
-    ##blob <- transform(blob, X2 = ifelse(is.na(X2), as.character("Unknown"), X2)) ## primOp
-    ##blob <- transform(blob, X3 = ifelse(is.na(X3), as.character("Unknown"), X3)) ## est
-    ##blob <- transform(blob, X4 = ifelse(is.na(X4), as.character("Fixed Wing"), as.character("Fixed Wing"))) ## facType
-    ##blob <- transform(blob, X5 = ifelse(is.na(X5), as.character("Unknown"), X5)) ## seasonality
-    ## Find a better method to do the above
-    ##colnames(blob) = c("V9","V10","V11","V12","V13")
+    blob <- data.frame(matrix(nrow=nrow(antFrame2),ncol=ncol(antFrame) - ncol(antFrame2)))
+    blob <- transform(blob, X1 = ifelse(is.na(X1), as.character("Unknown"), X1))  ##altCert
+    blob <- transform(blob, X2 = ifelse(is.na(X2), as.character("Unknown"), X2))  ##primOp
+    blob <- transform(blob, X3 = ifelse(is.na(X3), as.character("Unknown"), X3))  ##est
+    blob <- transform(blob, X4 = ifelse(is.na(X4), as.character("Fixed Wing"), as.character("Fixed Wing"))) ##facType
+    blob <- transform(blob, X5 = ifelse(is.na(X5), as.character("Unknown"), X5))  ##seasonality
+    ##Find a better method to do the above (??)
+    colnames(blob) = c("V9","V10","V11","V12","V13")
 
-    ##antFrame2 <- data.frame(antFrame2,blob) ## Additional fake columns
+    antFrame2 <- data.frame(antFrame2,blob)  ##Additional fake columns
 
     antFrame <- data.frame(rbind(antFrame, antFrame1))
     
@@ -94,8 +94,8 @@ shinyServer <- function(input, output) {
 
     antFrame <- transform(antFrame, facType = ifelse(facType == "X", "Unknown", as.character(facType)))
     antFrame <- transform(antFrame, seasonality = ifelse(seasonality == "X", "Unknown" , as.character(seasonality)))
-    antFrame <- transform(antFrame, est = ifelse(est == -999, "Unknown", as.numeric(est)))
-    antFrame <- transform(antFrame, alt = ifelse(alt == -999, "Unknown", as.numeric(alt)))
+    antFrame <- transform(antFrame, est = ifelse(est == -999, "Unknown", as.character(est)))
+    antFrame <- transform(antFrame, alt = ifelse(alt == -999, "Unknown", as.character(alt)))
     
 #### ^ base selection
     
