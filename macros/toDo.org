@@ -1,0 +1,5 @@
+* To do for antarcticR^online
+** Hide/show option for bases and facTypes
+*** How would I implement this? They are all part of the same data frame
+*** Perhaps I can have square select buttons, select a facType and plot on that
+*** Currently the whole data frame is plotted as one, due to the hover function 
