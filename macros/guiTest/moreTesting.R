@@ -8,7 +8,7 @@ require(colorRamps)
 
 ui <- fluidPage(
 
-    headerPanel(HTML(paste("antarcticR",tags$sup("offline")))),
+    headerPanel(HTML(paste("antarcticR",tags$sup("online")))),
     
     sidebarPanel(
         HTML("An online companion to the antarcticR package. Online visualiser for Antarctica."),
@@ -39,7 +39,6 @@ ui <- fluidPage(
     column(1,
            radioButtons("colourGradient", label = h5("Colour gradient"),
                         choices = list("Original" = 1, "Ice" = 2, "Inverse ice" = 3,"Monochromatic" = 4), selected = 1)),
-
     
     column(2,
            radioButtons("bedmapChoice", label = h5("Map choice"),
