@@ -6,7 +6,9 @@ library("Cairo")
 
 ui <- fluidPage(
     
-    headerPanel(HTML(paste("antarcticR",tags$sup("offline")))),
+    ##headerPanel(HTML(paste("antarcticR",tags$sup("online")))),
+
+    headerPanel(HTML(paste("antarcticR",tags$sup("offline")))), ### Set so flight attendants don't think I'm on the internet
     
     sidebarPanel(
         HTML("An online companion to the antarcticR package. Online visualiser for Antarctica."),
@@ -28,56 +30,18 @@ ui <- fluidPage(
             uiOutput("hover_info")
         ),
         width = 7
-    ),
-
-    ##    column(1,
-    ##     radioButtons("bList", label = h5("Base list"),
-    ##r            choices = list("ANITA-3 (2014-15)" = 1, "ANITA 4 (2017)" = 2), selected = 2)),
-    
-    column(2,
-           radioButtons("bedmapChoice", label = h5("Map choice"),
-                        choices = list("Ice thickness" = 1, "Bed" = 2,
-                                       "Surface" = 3, "Icemask" = 4), selected = 1)),
-    
-    column(3, 
-           sliderInput("sliderRes", label = h5("Resolution reduction"),
-                       min = 2, max = 100, value = 20)
-           )
+    )
     
 ) ## UI end
 
 shinyServer <- function(input, output) {
 
+    #### Var selection 1
+    
     csvFile <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-A3-unrestricted.csv.0"
     points <- read.csv(csvFile, header=0, sep=",")
     df.points <- as.matrix(points)
     antFrame <- data.frame(df.points)
-    
-    ##Attempt to add more base types    
-    csvFile1 <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-A3-unrestricted.csv.1"
-    points1 <- read.csv(csvFile1, header=0, sep=",")
-    df.points1 <- as.matrix(points1)
-    antFrame1 <- data.frame(df.points1)
-
-    csvFile2 <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-A3-unrestricted.csv.2"
-    points2 <- read.csv(csvFile2, header=0, sep=",")
-    df.points2 <- as.matrix(points2)
-    antFrame2 <- data.frame(df.points2)
-
-    ##blob <- data.frame(matrix(nrow=nrow(antFrame2),ncol=ncol(antFrame) - ncol(antFrame2)))
-    ##blob <- transform(blob, X1 = ifelse(is.na(X1), as.character("Unknown"), X1)) ## altCert
-    ##blob <- transform(blob, X2 = ifelse(is.na(X2), as.character("Unknown"), X2)) ## primOp
-    ##blob <- transform(blob, X3 = ifelse(is.na(X3), as.character("Unknown"), X3)) ## est
-    ##blob <- transform(blob, X4 = ifelse(is.na(X4), as.character("Fixed Wing"), as.character("Fixed Wing"))) ## facType
-    ##blob <- transform(blob, X5 = ifelse(is.na(X5), as.character("Unknown"), X5)) ## seasonality
-    ## Find a better method to do the above
-    ##colnames(blob) = c("V9","V10","V11","V12","V13")
-
-    ##antFrame2 <- data.frame(antFrame2,blob) ## Additional fake columns
-
-    antFrame <- data.frame(rbind(antFrame, antFrame1))
-    
-    ##antFrame <- data.frame(rbind(antFrame, antFrame1, antFrame2))
 
     colnames(antFrame) = c("name", "latDeg", "latMin", "latCar", "longDeg", "longMin", "longCar", "alt", "altCert", "primaryOperator", "est", "facType", "seasonality")
 
@@ -96,32 +60,33 @@ shinyServer <- function(input, output) {
     antFrame <- transform(antFrame, seasonality = ifelse(seasonality == "X", "Unknown" , as.character(seasonality)))
     antFrame <- transform(antFrame, est = ifelse(est == -999, "Unknown", as.numeric(est)))
     antFrame <- transform(antFrame, alt = ifelse(alt == -999, "Unknown", as.numeric(alt)))
+
+### Var selection 2
+
+    csvFile <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-A3-unrestricted.csv.2"
+    points2 <- read.csv(csvFile, header=0, sep=",")
+    df.points2 <- as.matrix(points2)
+    antFrame2 <- data.frame(df.points2)
+
+    colnames(antFrame2) = c("name", "latDeg", "latMin", "latCar", "longDeg", "longMin", "longCar", "alt")
+    antFrame2$latDeg <- as.numeric(as.character(antFrame2$latDeg))
+    antFrame2$latMin <- as.numeric(as.character(antFrame2$latMin))
+    antFrame2$lat <- -antFrame2$latDeg - antFrame2$latMin/60
+
+    antFrame2$longDeg <- as.numeric(as.character(antFrame2$longDeg))
+    antFrame2$longMin <- as.numeric(as.character(antFrame2$longMin))
+    antFrame2$longCar <- as.character(antFrame2$longCar)
+
+    antFrame2 <- mutate( antFrame2, long = ifelse(longCar == "E", longDeg + (longMin)/60, -longDeg - (longMin)/60) )
+    antFrame2  <- longLatToSimpleBEDMAP(antFrame2)
     
 #### ^ base selection
     
     output$antarcticCanvas <- renderPlot({
 
-        if(input$bedmapChoice == 1)
-        {
-            BMgradient=raster("/home/berg/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR/data/bedmap2_bin/bedmap2_thickness.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
-        }
-
-        if(input$bedmapChoice == 2)
-        {
-            BMgradient=raster("/home/berg/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR/data/bedmap2_bin/bedmap2_bed.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
-        }
-
-        if(input$bedmapChoice == 3)
-        {
-            BMgradient=raster("/home/berg/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR/data/bedmap2_bin/bedmap2_surface.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
-        }
-
-        if(input$bedmapChoice == 4)
-        {
-            BMgradient=raster("/home/berg/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR/data/bedmap2_bin/bedmap2_icemask_grounded_and_shelves.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
-        }
+        BMgradient=raster("/home/berg/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR/data/bedmap2_bin/bedmap2_thickness.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
         
-        resolutionFactor <- input$sliderRes
+        resolutionFactor <- 20
         
         BMgradient <- aggregate(BMgradient, fact=resolutionFactor, fun=max)
         
@@ -135,43 +100,29 @@ shinyServer <- function(input, output) {
             geom_point(data = antFrame, aes(x = easting, y = northing)) +
             geom_tile(data=bmdf,aes(bbb,ccc,fill=varFillBBB)) +
             geom_point(data = antFrame, aes(x = easting, y = northing, color=facType), size=2) +
-            guides(fill=guide_legend(title="Gradient")) +
-            coord_cartesian(xlim = ranges$easting, ylim = ranges$northing, expand = FALSE) ## Needed for zooming
+            geom_point(data = antFrame2, aes(x = easting, y = northing), size=2) +
+            guides(fill=guide_legend(title="Gradient"))
 
-    })
-
-######
-
-###### ZOOM in
-
-    ranges <- reactiveValues(easting = NULL, northing = NULL)
-    
-    observeEvent(input$antarcticCanvas_dblclick, {
-        brush <- input$antarcticCanvas_brush
-        if (!is.null(brush)) {
-            ranges$easting <- c(brush$xmin, brush$xmax)
-            ranges$northing <- c(brush$ymin, brush$ymax)
-
-        } else {
-            ranges$easting <- NULL
-            ranges$northing <- NULL
-        }
     })
     
 ###### Hover
 
     output$hover_info <- renderUI({        
         hover <- input$plot_hover
+        hover2 <- input$plot_hover
 
         point <- nearPoints(antFrame, hover, threshold = 5, maxpoints = 1, addDist = TRUE)
-        
-        if (nrow(point) == 0) return(NULL)
-        
+        point2 <- nearPoints(antFrame2, hover2, threshold = 5, maxpoints = 1, addDist = TRUE)
+                
         left_pct <- (hover$x - hover$domain$left) / (hover$domain$right - hover$domain$left)
         top_pct <- (hover$domain$top - hover$y) / (hover$domain$top - hover$domain$bottom)
-        
         left_px <- hover$range$left + left_pct * (hover$range$right - hover$range$left)
         top_px <- hover$range$top + top_pct * (hover$range$bottom - hover$range$top)
+
+        left_pct2 <- (hover2$x - hover2$domain$left) / (hover2$domain$right - hover2$domain$left)
+        top_pct2 <- (hover2$domain$top - hover2$y) / (hover2$domain$top - hover2$domain$bottom)
+        left_px2 <- hover2$range$left + left_pct2 * (hover2$range$right - hover2$range$left)
+        top_px2 <- hover2$range$top + top_pct2 * (hover2$range$bottom - hover2$range$top)
         
         style <- paste0("position:absolute; z-index:100; background-color: rgba(245, 245, 245, 0.85); ",
                         "left:", left_px + 2, "px; top:", top_px + 2, "px;")
@@ -186,8 +137,18 @@ shinyServer <- function(input, output) {
                           "<b> Altitude: </b>", point$alt, "<br/>",
                           "<b> Longitude: </b>", point$long, "<br/>",
                           "<b> Latitude: </b>", point$lat, "<br/>"))))
+
+    wellPanel(
+            style = style,
+            p(HTML(paste0("<b> Name: </b>", point2$name, "<br/>",
+                          "<b> Altitude: </b>", point2$alt, "<br/>",
+                          "<b> Longitude: </b>", point2$long, "<br/>",
+                          "<b> Latitude: </b>", point2$lat, "<br/>"))))
+
+        ## Need some sort of conditional to decide which wellpanel to pop up
         
     })
+    
     
 } ## server end
 
