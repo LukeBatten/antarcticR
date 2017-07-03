@@ -3,5 +3,7 @@
 *** How would I implement this? They are all part of the same data frame
 *** Perhaps I can have square select buttons, select a facType and plot on that
 *** Currently the whole data frame is plotted as one, due to the hover function 
-** Add a transparency option to geom_tile
-** Explore ggplot aesthetics
+** PENDING Add a transparency option to geom_tile
+** DONE Explore ggplot aesthetics
+** DONE Other colour gradients?
+** A3, A4 baselists - radio buttons

@@ -1,11 +1,13 @@
-library("dplyr")
-library("ggplot2")
-library("shiny")
-library("antarcticR")
-library("Cairo")
+library(dplyr)
+library(graphics)
+library(ggplot2)
+library(shiny)
+library(antarcticR)
+library(Cairo)
+require(colorRamps)
 
 ui <- fluidPage(
-    
+
     headerPanel(HTML(paste("antarcticR",tags$sup("offline")))),
     
     sidebarPanel(
@@ -32,7 +34,12 @@ ui <- fluidPage(
 
     ##    column(1,
     ##     radioButtons("bList", label = h5("Base list"),
-    ##r            choices = list("ANITA-3 (2014-15)" = 1, "ANITA 4 (2017)" = 2), selected = 2)),
+    ##            choices = list("ANITA-3 (2014-15)" = 1, "ANITA 4 (2017)" = 2), selected = 2)),
+
+    column(1,
+           radioButtons("colourGradient", label = h5("Colour gradient"),
+                        choices = list("Original" = 1, "Ice" = 2, "Inverse ice" = 3,"Monochromatic" = 4), selected = 1)),
+
     
     column(2,
            radioButtons("bedmapChoice", label = h5("Map choice"),
@@ -113,7 +120,9 @@ shinyServer <- function(input, output) {
     
 #### ^ base selection
     
-    output$antarcticCanvas <- renderPlot({
+    output$antarcticCanvas <- renderPlot(
+        
+    {
 
         if(input$bedmapChoice == 1)
         {
@@ -143,6 +152,11 @@ shinyServer <- function(input, output) {
         bmdf <- data.frame(p)
         colnames(bmdf) <- c("bbb", "ccc", "varFillBBB")
 
+        if(input$colourGradient == 1){colorRemap <- scale_fill_gradient(low = "navyblue", high = "deepskyblue")}
+        if(input$colourGradient == 2){colorRemap <- scale_fill_gradient(low = "dodgerblue1", high = "ghostwhite")}
+        if(input$colourGradient == 3){colorRemap <- scale_fill_gradient(low = "snow", high = "dodgerblue1")}
+        if(input$colourGradient == 4){colorRemap <- scale_fill_gradient(low = "white", high = "black")}
+
         ## raster ^
         
         ggplot()+
@@ -150,6 +164,7 @@ shinyServer <- function(input, output) {
             geom_tile(data=bmdf,aes(bbb,ccc,fill=varFillBBB)) +
             geom_point(data = antFrame, aes(x = easting, y = northing, color=facType, shape=facType), size=2, stroke=0.8) +
             scale_shape_manual(values=seq(1,100)) +
+            colorRemap + ## Colour BEDMAP
             guides(fill=guide_legend(title="Gradient")) +
             coord_cartesian(xlim = ranges$easting, ylim = ranges$northing, expand = FALSE) ## Needed for zooming
 
