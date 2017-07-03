@@ -63,7 +63,6 @@ shinyServer <- function(input, output) {
     points2 <- read.csv(csvFile2, header=0, sep=",")
     df.points2 <- as.matrix(points2)
     antFrame2 <- data.frame(df.points2)
-
     blob <- data.frame(matrix(nrow=nrow(antFrame2),ncol=ncol(antFrame) - ncol(antFrame2)))
     blob <- transform(blob, X1 = ifelse(is.na(X1), as.character("Unknown"), X1))  ##altCert
     blob <- transform(blob, X2 = ifelse(is.na(X2), as.character("Unknown"), X2))  ##primOp
@@ -72,12 +71,27 @@ shinyServer <- function(input, output) {
     blob <- transform(blob, X5 = ifelse(is.na(X5), as.character("Unknown"), X5))  ##seasonality
     ##Find a better method to do the above (??)
     colnames(blob) = c("V9","V10","V11","V12","V13")
-
     antFrame2 <- data.frame(antFrame2,blob)  ##Additional fake columns
 
-    antFrame <- data.frame(rbind(antFrame, antFrame1))
+    ## Inconsistent spreadsheet formatting with "millidegrees"
+    ## Put csvFile3 here, come back to this
     
-    ##antFrame <- data.frame(rbind(antFrame, antFrame1, antFrame2))
+    csvFile4 <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-A3-unrestricted.csv.4"
+    points4 <- read.csv(csvFile4, header=0, sep=",")
+    df.points4 <- as.matrix(points4)
+    antFrame4 <- data.frame(df.points4)
+    blob2 <- data.frame(matrix(nrow=nrow(antFrame4),ncol=ncol(antFrame) - ncol(antFrame4)))
+    blob2 <- transform(blob2, X1 = ifelse(is.na(X1), as.character("Unknown"), X1))  ##altCert
+    blob2 <- transform(blob2, X2 = ifelse(is.na(X2), as.character("Unknown"), X2))  ##primOp
+    blob2 <- transform(blob2, X3 = ifelse(is.na(X3), as.character("Unknown"), X3))  ##est
+    blob2 <- transform(blob2, X4 = ifelse(is.na(X4), as.character("BAS instruments"), as.character("BAS instruments"))) ##facType
+    blob2 <- transform(blob2, X5 = ifelse(is.na(X5), as.character("Unknown"), X5))  ##seasonality
+    ##Find a better method to do the above (??)
+    colnames(blob2) = c("V9","V10","V11","V12","V13")
+    antFrame4 <- data.frame(antFrame4,blob2)  ##Additional fake columns
+    
+    ## Combine into one for hovering function    
+    antFrame <- data.frame(rbind(antFrame, antFrame1, antFrame2, antFrame4))
 
     colnames(antFrame) = c("name", "latDeg", "latMin", "latCar", "longDeg", "longMin", "longCar", "alt", "altCert", "primaryOperator", "est", "facType", "seasonality")
 
@@ -134,7 +148,7 @@ shinyServer <- function(input, output) {
         ggplot()+
             geom_point(data = antFrame, aes(x = easting, y = northing)) +
             geom_tile(data=bmdf,aes(bbb,ccc,fill=varFillBBB)) +
-            geom_point(data = antFrame, aes(x = easting, y = northing, color=facType), size=2) +
+            geom_point(data = antFrame, aes(x = easting, y = northing, color=facType)) +
             guides(fill=guide_legend(title="Gradient")) +
             coord_cartesian(xlim = ranges$easting, ylim = ranges$northing, expand = FALSE) ## Needed for zooming
 
