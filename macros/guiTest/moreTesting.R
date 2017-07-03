@@ -82,6 +82,24 @@ shinyServer <- function(input, output) {
 
     ## Inconsistent spreadsheet formatting with "millidegrees"
     ## Put csvFile3 here, come back to this
+    csvFile3 <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-A3-unrestricted.csv.3"
+    points3 <- read.csv(csvFile3, header=0, sep=",")
+    df.points3 <- as.matrix(points3)
+    antFrame3 <- data.frame(df.points3)## Site name,	Latitude (degrees)	Latitude (millidegrees)	Latitude (minutes)	Latitude (cardinality)	Longitude (degrees)	Longitude (millidegrees)	Longitude (minutes)	Longitude (cardinality)	Altitude above sea level (m)	Established	Current status
+
+    antFrame3a <- data.frame(antFrame3[,1], antFrame3[,2], antFrame3[,4], antFrame3[,5],antFrame3[,6],antFrame3[,8],antFrame3[,9],antFrame3[,10])
+
+    blob3 <- data.frame(matrix(nrow=nrow(antFrame3),ncol=2))
+    blob3b <- data.frame(matrix(nrow=nrow(antFrame3),ncol=2))
+
+    antFrame3 <- data.frame(antFrame3a,blob3,antFrame3[,10],blob3b)
+    colnames(antFrame3) = c("V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "V9", "V10", "V11", "V12", "V13")
+
+    antFrame3 <- transform(antFrame3, V9 = ifelse(is.na(V9), as.character("Unknown"), V9))  ##altCert
+    antFrame3 <- transform(antFrame3, V10 = ifelse(is.na(V10), as.character("Unknown"), V10))  ##primOp
+    antFrame3 <- transform(antFrame3, V12 = ifelse(is.na(V12), as.character("AWS"), as.character("AWS"))) ##facType
+    antFrame3 <- transform(antFrame3, V13 = ifelse(is.na(V13), as.character("Unknown"), V13 ))  ##seasonality
+    ##
     
     csvFile4 <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-A3-unrestricted.csv.4"
     points4 <- read.csv(csvFile4, header=0, sep=",")
@@ -98,7 +116,7 @@ shinyServer <- function(input, output) {
     antFrame4 <- data.frame(antFrame4,blob2)  ##Additional fake columns
     
     ## Combine into one for hovering function    
-    antFrame <- data.frame(rbind(antFrame, antFrame1, antFrame2, antFrame4))
+    antFrame <- data.frame(rbind(antFrame, antFrame1, antFrame2, antFrame3, antFrame4))
 
     colnames(antFrame) = c("name", "latDeg", "latMin", "latCar", "longDeg", "longMin", "longCar", "alt", "altCert", "primaryOperator", "est", "facType", "seasonality")
 
@@ -120,8 +138,7 @@ shinyServer <- function(input, output) {
     
 #### ^ base selection
     
-    output$antarcticCanvas <- renderPlot(
-        
+    output$antarcticCanvas <- renderPlot(        
     {
 
         if(input$bedmapChoice == 1)
@@ -162,7 +179,7 @@ shinyServer <- function(input, output) {
         ggplot()+
             geom_point(data = antFrame, aes(x = easting, y = northing)) +
             geom_tile(data=bmdf,aes(bbb,ccc,fill=varFillBBB)) +
-            geom_point(data = antFrame, aes(x = easting, y = northing, color=facType, shape=facType), size=2, stroke=0.8) +
+            geom_point(data = antFrame, aes(x = easting, y = northing, color=facType, shape=facType), size=2, stroke=0.5) +
             scale_shape_manual(values=seq(1,100)) +
             colorRemap + ## Colour BEDMAP
             guides(fill=guide_legend(title="Gradient")) +
