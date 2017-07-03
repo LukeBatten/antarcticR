@@ -148,7 +148,7 @@ shinyServer <- function(input, output) {
         ggplot()+
             geom_point(data = antFrame, aes(x = easting, y = northing)) +
             geom_tile(data=bmdf,aes(bbb,ccc,fill=varFillBBB)) +
-            geom_point(data = antFrame, aes(x = easting, y = northing, color=facType)) +
+            geom_point(data = antFrame, aes(x = easting, y = northing, color=facType, shape=facType), size=2) +
             guides(fill=guide_legend(title="Gradient")) +
             coord_cartesian(xlim = ranges$easting, ylim = ranges$northing, expand = FALSE) ## Needed for zooming
 
