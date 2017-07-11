@@ -19,7 +19,7 @@ ui <- fluidPage(
     mainPanel(
         div(
             style = "position:relative",
-            plotOutput("antarcticCanvas", 
+            plotOutput("antarcticCanvas",
                        hover = hoverOpts("plot_hover", delay = 10, delayType = "debounce"),
                        dblclick = "antarcticCanvas_dblclick",
                        brush = brushOpts(
@@ -52,7 +52,7 @@ ui <- fluidPage(
     
 ) ## UI end
 
-shinyServer <- function(input, output) {
+shinyServer <- function(input, output, session) {
 
     csvFile <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-A3-unrestricted.csv.0"
     points <- read.csv(csvFile, header=0, sep=",")
@@ -169,7 +169,7 @@ shinyServer <- function(input, output) {
         colnames(bmdf) <- c("bbb", "ccc", "varFillBBB")
 
         if(input$colourGradient == 1){colorRemap <- scale_fill_gradient(low = "navyblue", high = "deepskyblue")}
-        if(input$colourGradient == 2){colorRemap <- scale_fill_gradient(low = "dodgerblue1", high = "ghostwhite")}
+        if(input$colourGradient == 2){colorRemap <- scale_fill_gradient(low = "dodgerblue3", high = "ghostwhite")}
         if(input$colourGradient == 3){colorRemap <- scale_fill_gradient(low = "snow", high = "dodgerblue1")}
         if(input$colourGradient == 4){colorRemap <- scale_fill_gradient(low = "white", high = "black")}
 
@@ -184,7 +184,12 @@ shinyServer <- function(input, output) {
             guides(fill=guide_legend(title="Gradient")) +
             coord_cartesian(xlim = ranges$easting, ylim = ranges$northing, expand = FALSE) ## Needed for zooming
 
-    })
+    }
+
+
+    )
+    
+   
 
 ######
 
@@ -229,7 +234,7 @@ shinyServer <- function(input, output) {
                           "<b> Established: </b>", point$est, "<br/>",
                           "<b> Facility Type: </b>", point$facType, "<br/>",
                           "<b> Seasonality: </b>", point$seasonality, "<br/>",
-                          "<b> Altitude: </b>", point$alt, "<br/>",
+                          "<b> Altitude: </b>", point$alt, "m <br/>",
                           "<b> Longitude: </b>", point$long, "<br/>",
                           "<b> Latitude: </b>", point$lat, "<br/>"))))
         
