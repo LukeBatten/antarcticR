@@ -35,7 +35,7 @@ ui <- pageWithSidebar(
 
 server <- function(input, output) {
 
-    csvFile <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-A3-unrestricted.csv.0"
+    csvFile <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-unrestricted-A3.csv.0"
 
 #### Function here to turn lats + cardinalities into 
 

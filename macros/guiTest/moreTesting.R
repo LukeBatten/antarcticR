@@ -54,18 +54,18 @@ ui <- fluidPage(
 
 shinyServer <- function(input, output, session) {
 
-    csvFile <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-A3-unrestricted.csv.0"
+    csvFile <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-unrestricted-A3.csv.0"
     points <- read.csv(csvFile, header=0, sep=",")
     df.points <- as.matrix(points)
     antFrame <- data.frame(df.points)
     
     ##Attempt to add more base types    
-    csvFile1 <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-A3-unrestricted.csv.1"
+    csvFile1 <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-unrestricted-A3.csv.1"
     points1 <- read.csv(csvFile1, header=0, sep=",")
     df.points1 <- as.matrix(points1)
     antFrame1 <- data.frame(df.points1)
 
-    csvFile2 <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-A3-unrestricted.csv.2"
+    csvFile2 <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-unrestricted-A3.csv.2"
     points2 <- read.csv(csvFile2, header=0, sep=",")
     df.points2 <- as.matrix(points2)
     antFrame2 <- data.frame(df.points2)
@@ -81,7 +81,7 @@ shinyServer <- function(input, output, session) {
 
     ## Inconsistent spreadsheet formatting with "millidegrees"
     ## Put csvFile3 here, come back to this
-    csvFile3 <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-A3-unrestricted.csv.3"
+    csvFile3 <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-unrestricted-A3.csv.3"
     points3 <- read.csv(csvFile3, header=0, sep=",")
     df.points3 <- as.matrix(points3)
     antFrame3 <- data.frame(df.points3)## Site name,	Latitude (degrees)	Latitude (millidegrees)	Latitude (minutes)	Latitude (cardinality)	Longitude (degrees)	Longitude (millidegrees)	Longitude (minutes)	Longitude (cardinality)	Altitude above sea level (m)	Established	Current status
@@ -100,7 +100,7 @@ shinyServer <- function(input, output, session) {
     antFrame3 <- transform(antFrame3, V13 = ifelse(is.na(V13), as.character("Unknown"), V13 ))  ##seasonality
     ##
     
-    csvFile4 <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-A3-unrestricted.csv.4"
+    csvFile4 <- "~/Dropbox/LinuxSync/PhD/ANITA/baseListExtension/data/convertedFiles/baseListCSVs/base_list-unrestricted-A3.csv.4"
     points4 <- read.csv(csvFile4, header=0, sep=",")
     df.points4 <- as.matrix(points4)
     antFrame4 <- data.frame(df.points4)
@@ -234,7 +234,7 @@ shinyServer <- function(input, output, session) {
                           "<b> Established: </b>", point$est, "<br/>",
                           "<b> Facility Type: </b>", point$facType, "<br/>",
                           "<b> Seasonality: </b>", point$seasonality, "<br/>",
-                          "<b> Altitude: </b>", point$alt, "m <br/>",
+                          "<b> Altitude: </b>", point$alt, " m <br/>",
                           "<b> Longitude: </b>", point$long, "<br/>",
                           "<b> Latitude: </b>", point$lat, "<br/>"))))
         
