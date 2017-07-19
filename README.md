@@ -7,5 +7,7 @@ A simplified bottom-Earth view is also available.
 Some output views:
 ![alt text](https://github.com/LukeBatten/antarcticR/blob/master/img/antarcticRfeatures.png)
 
-Simplified output view:
-![alt text](https://github.com/LukeBatten/antarcticR/blob/master/img/simplified_view.png)
+This is hosted online, but only via a slow VPS: [antarcticR<sup>online</sup>](http://lukebatten.net:3838/antarcticR/)
+
+Online view:
+![alt text](https://github.com/LukeBatten/antarcticR/blob/master/img/animated_antarcticR.gif)
