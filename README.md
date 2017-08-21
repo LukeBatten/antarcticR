@@ -8,6 +8,7 @@ Some output views:
 ![alt text](https://github.com/LukeBatten/antarcticR/blob/master/img/antarcticRfeatures.png)
 
 This is hosted online, but only via a slow VPS: [antarcticR<sup>online</sup>](http://lukebatten.net:3838/antarcticR/)
+Note: this will not work at institutions that block inbound track via port 3838.
 
 Online view:
 ![alt text](https://github.com/LukeBatten/antarcticR/blob/master/img/animated_antarcticR.gif)
