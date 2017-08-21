@@ -205,7 +205,7 @@ plotAntarctica = function(antMap, df, clusterPlot=FALSE, selfClusterPlot=FALSE, 
 
     if(BEDMAP_GRAD=="thickness")
     {
-        BMgradient=raster("/home/berg/Dropbox/LinuxSync/PhD/ANITA/2017Stuff/clusterDir/antarcticR/data/bedmap2_bin/bedmap2_thickness.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
+        BMgradient=raster("../data/bedmap2_bin/bedmap2_bin/bedmap2_thickness.flt",xmn=-3333500, xmax=3333500, ymin=-3333500, ymax=3333500,crs=NA,template=NULL)
         
     }
     if(BEDMAP_GRAD=="surface")
