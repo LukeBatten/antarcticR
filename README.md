@@ -12,4 +12,4 @@ This is hosted online, but only via a slow VPS: [antarcticR<sup>online</sup>](ht
 Note: this will not work at institutions that block inbound traffic via port 3838.
 
 Online view:
-![alt text](https://github.com/LukeBatten/antarcticR/blob/master/img/animated_antarcticR.gif)
+![alt text](https://github.com/LukeBatten/antarcticR/blob/master/img/antarcticRtool.gif)
